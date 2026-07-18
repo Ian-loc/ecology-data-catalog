@@ -837,7 +837,7 @@
     "institutional_status": "acadêmico",
     "owner_or_manager": "NCAR / UCAR",
     "last_verified": "2026-07-18",
-    "notes": "É guia e catálogo, não hospeda necessariamente os dados."
+    "notes": "É guia e catálogo, não hospeda necessariamente os dados. Página institucional sobre missão e visão: https://climatedataguide.ucar.edu/about/mission-vision"
   },
   {
     "resource_id": "DR0036",
@@ -1198,5 +1198,29 @@
     "owner_or_manager": "NASA / Oak Ridge National Laboratory",
     "last_verified": "2026-07-18",
     "notes": "Inclui datasets individuais como FRED; citar DOI e versão do dataset utilizado."
+  },
+  {
+    "resource_id": "DR0051",
+    "resource_name": "Carbon Brief COSMOS",
+    "acronym": "COSMOS",
+    "resource_type": "portal",
+    "description": "Recurso interativo do Carbon Brief para explorar informações sobre clima, carbono e mudanças climáticas.",
+    "homepage_url": "https://interactive.carbonbrief.org/cosmos/index.html",
+    "thematic_domains": "clima | carbono | mudanças climáticas",
+    "data_product_types": "visualização interativa | gráficos | conteúdo explicativo",
+    "data_formats": "visualização web",
+    "geographic_coverage": "global",
+    "spatial_resolution": "não se aplica à interface; depende das fontes subjacentes",
+    "temporal_coverage": "varia conforme o conteúdo apresentado",
+    "temporal_resolution": "varia conforme o conteúdo apresentado",
+    "data_sources": "literatura científica | bases climáticas e de carbono | síntese editorial",
+    "free_download": "não se aplica",
+    "access_conditions": "aberto",
+    "api_available": "não",
+    "license": "não localizada",
+    "institutional_status": "organização de comunicação científica",
+    "owner_or_manager": "Carbon Brief",
+    "last_verified": "2026-07-18",
+    "notes": "Recurso interativo e de síntese; não deve ser tratado como repositório nem como fonte primária dos dados. Verificar e citar as fontes originais indicadas na própria visualização."
   }
 ]
