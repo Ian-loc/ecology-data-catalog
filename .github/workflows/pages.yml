@@ -1,7 +1,7 @@
 name: Publicar no GitHub Pages
 on:
   push:
-    branches: ["meta-analysis2"]
+    branches: ["main"]
   workflow_dispatch:
 permissions:
   contents: read
