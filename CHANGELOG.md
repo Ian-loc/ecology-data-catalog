@@ -1,5 +1,17 @@
 # Histórico de mudanças
 
+## Não lançado — UX4 acessibilidade, responsividade e desempenho
+
+- reforçados landmarks, fieldsets, títulos associados e nomes acessíveis;
+- adicionados estados de carregamento e anúncios para resultados e gráficos;
+- adicionados foco previsível após busca e remoção de filtros;
+- links externos passam a informar abertura em nova aba;
+- adicionados fallbacks úteis para uso sem JavaScript;
+- adicionada camada específica para leitores de tela, alto contraste e movimento reduzido;
+- refinados layouts em larguras intermediárias e móveis;
+- adicionados testes de estrutura semântica, dependências externas e orçamento de peso;
+- mantidos todos os 34 campos e o CSV canônico sem alterações.
+
 ## Não lançado — UX3 redesenho dos cards
 
 - reorganizada a leitura dos cards em identidade, descrição, acesso, utilidade, limitação, ações e detalhes;

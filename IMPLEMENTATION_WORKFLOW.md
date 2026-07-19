@@ -29,7 +29,7 @@ Melhorar a descoberta e comparação de fontes, corrigir ambiguidades documentai
 | UX1 | Arquitetura, linguagem e navegação | validado e documentado | PR #5 e run 29700737238 concluídos |
 | UX2 | Filtros e resultados | validado e documentado | PR #7 e run 29701061221 concluídos |
 | UX3 | Redesenho dos cards | validado e documentado | PR #9 e run 29701341054 concluídos |
-| UX4 | Acessibilidade, responsividade e desempenho | planejado | teclado, contraste, mobile, carregamento e testes verificados |
+| UX4 | Acessibilidade, responsividade e desempenho | em desenvolvimento | branch implementada; falta PR, CI, integração, publicação e Drive |
 | DATA1 | Correções estruturais do esquema | planejado | `resource_type`, escala geográfica controlada, formatos e citações normalizados |
 | DATA2 | Revisão das 51 fontes | planejado | lotes auditáveis com evidência, diff, validação e changelog |
 | RELEASE1 | Fechamento documental | validado e documentado | título, ORCID, licenças e CFF integrados no PR #5 |
@@ -69,17 +69,25 @@ Melhorar a descoberta e comparação de fontes, corrigir ambiguidades documentai
 - [x] Drive atualizado;
 - [ ] confirmar visualmente a publicação.
 
-## UX4 — tarefas planejadas
+## UX4 — tarefas
 
-- [ ] testar navegação integral por teclado;
-- [ ] revisar ordem de foco, nomes acessíveis e estados expandidos;
-- [ ] validar contraste e uso de cor não exclusivo;
-- [ ] revisar layouts em larguras móveis e intermediárias;
-- [ ] evitar animação quando `prefers-reduced-motion` estiver ativo;
-- [ ] adicionar fallback informativo quando JavaScript estiver indisponível;
-- [ ] verificar peso dos arquivos e ausência de dependências desnecessárias;
-- [ ] ampliar testes automáticos de acessibilidade estrutural;
-- [ ] registrar GitHub e Drive.
+- [x] reforçar landmarks, títulos associados, fieldsets e nomes acessíveis;
+- [x] adicionar estados de carregamento e anúncios de resultados;
+- [x] tornar foco previsível após busca e remoção de filtros;
+- [x] identificar links que abrem em nova aba;
+- [x] manter texto e símbolos junto aos estados de cor;
+- [x] revisar layouts em larguras intermediárias e móveis;
+- [x] respeitar `prefers-reduced-motion`;
+- [x] adicionar fallback informativo sem JavaScript;
+- [x] adicionar suporte a alto contraste forçado;
+- [x] impedir dependências externas de scripts e estilos;
+- [x] definir orçamento de peso para HTML, CSS e JavaScript;
+- [x] ampliar testes automáticos de acessibilidade estrutural;
+- [x] preservar todos os 34 campos e o CSV canônico;
+- [ ] validar no pull request;
+- [ ] integrar após CI aprovado;
+- [ ] verificar o site publicado;
+- [ ] registrar o resultado no Drive.
 
 ## RELEASE1 — resultado
 
@@ -109,7 +117,8 @@ Melhorar a descoberta e comparação de fontes, corrigir ambiguidades documentai
 
 ## Ordem operacional atual
 
-1. executar UX4;
-2. executar DATA1 e DATA2;
-3. confirmar publicação e fechar documentação;
-4. somente então criar `v1.0.0` e o depósito no Zenodo.
+1. validar e integrar UX4;
+2. verificar a publicação e registrar o ciclo no Drive;
+3. executar DATA1;
+4. executar DATA2 em lotes;
+5. fechar documentação e somente então criar `v1.0.0` e o depósito no Zenodo.
