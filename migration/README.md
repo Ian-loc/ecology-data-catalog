@@ -36,9 +36,12 @@ A matriz não duplica os campos existentes. Os valores atuais permanecem no arqu
 
 - 51 fontes representadas;
 - 24 decisões de alta confiança;
-- 27 decisões de confiança média e revisão manual;
+- 27 decisões de confiança média;
 - nenhuma decisão de baixa confiança;
-- URLs de orientação de citação mantidas vazias até confirmação oficial específica;
+- 16 registros sem exceção estão prontos para a futura migração;
+- 35 registros permanecem em revisão manual por confiança média ou exceção técnica;
+- todo valor `other_documented` exige exceção explícita e revisão manual, mesmo quando a classificação geral tem alta confiança;
+- URLs de orientação de citação permanecem vazias até confirmação oficial específica;
 - CSV canônico ainda permanece em 0.7.0, com 34 campos;
 - nenhuma proposta deve ser aplicada antes da revisão dos registros marcados como `revisão_manual`.
 
