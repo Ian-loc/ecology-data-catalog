@@ -28,11 +28,6 @@ MATRIX_COLUMNS = [
     "exceptions",
 ]
 CONFIDENCE = {"alta", "média", "baixa"}
-MIGRATION_STATUS = {
-    "alta": "pronto_para_migração",
-    "média": "revisão_manual",
-    "baixa": "revisão_manual",
-}
 EXCEPTION_CODES = {
     "other_documented_requires_manual_confirmation",
     "global_non_geographic_resource",
@@ -122,8 +117,9 @@ for line, proposal in enumerate(matrix_rows, start=2):
     confidence = proposal["confidence"]
     if confidence not in CONFIDENCE:
         fail(f"linha {line}: confiança inválida")
-    if proposal["migration_status"] != MIGRATION_STATUS[confidence]:
-        fail(f"linha {line}: migration_status incompatível com a confiança")
+    expected_status = "revisão_manual" if confidence != "alta" or exceptions else "pronto_para_migração"
+    if proposal["migration_status"] != expected_status:
+        fail(f"linha {line}: migration_status incompatível com confiança e exceções")
     if not proposal["rationale"].strip():
         fail(f"linha {line}: justificativa vazia")
 
@@ -150,10 +146,15 @@ for line, proposal in enumerate(matrix_rows, start=2):
     if source["programmatic_access"] == "não" and [value for value in protocols if value not in {"unknown", "not_applicable"}]:
         fail(f"linha {line}: acesso programático não contradiz protocolo positivo")
 
-    if "other_documented" in protocols or any(tool.startswith("other_documented") for tool in tools):
+    has_other_documented = (
+        "other_documented" in formats
+        or "other_documented" in protocols
+        or any(tool.startswith("other_documented") for tool in tools)
+    )
+    if has_other_documented:
         if "other_documented_requires_manual_confirmation" not in exceptions:
             fail(f"linha {line}: other_documented exige exceção e revisão manual")
-        if confidence == "alta" and proposal["migration_status"] == "pronto_para_migração":
+        if proposal["migration_status"] != "revisão_manual":
             fail(f"linha {line}: other_documented não pode ser migrado automaticamente")
 
 confidence_counts = Counter(row["confidence"] for row in matrix_rows)
@@ -169,6 +170,8 @@ if status_counts["pronto_para_migração"] == 0 or status_counts["revisão_manua
 print(
     "OK: matriz DATA1-B validada — "
     f"51 fontes; {confidence_counts['alta']} alta confiança; "
-    f"{confidence_counts['média']} revisão manual; "
+    f"{confidence_counts['média']} confiança média; "
+    f"{status_counts['pronto_para_migração']} prontas; "
+    f"{status_counts['revisão_manual']} para revisão manual; "
     f"{len(type_counts)} tipos; {len(scope_counts)} escalas; CSV 0.7.0 preservado"
 )
