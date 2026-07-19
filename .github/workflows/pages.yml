@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validar workflow de correções de qualidade
+        run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar CSV e gerar artefatos
         run: python3 scripts/build_catalog.py
       - name: Validar proposta de esquema
