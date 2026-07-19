@@ -1,12 +1,153 @@
-const $=s=>document.querySelector(s),els={q:$("#q"),area:$("#area"),brazil:$("#brazil"),coverage:$("#coverage"),download:$("#download"),programmatic:$("#programmatic"),list:$("#list"),empty:$("#empty"),count:$("#count")};let all=[],filtered=[];
-const split=v=>String(v||"").split("|").map(x=>x.trim()).filter(Boolean);
-const norm=v=>String(v||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-const esc=v=>String(v||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
-const opt=(el,values)=>[...new Set(values.filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR")).forEach(v=>el.add(new Option(v,v)));
-const detail=(k,v)=>`<div class="detail"><strong>${k}</strong><span>${esc(v||"Não informado")}</span></div>`;
-const link=(label,url)=>url&&/^https:\/\//.test(url)?`<a class="source" href="${esc(url)}" target="_blank" rel="noopener">${label} ↗</a>`:"";
-function card(r){const ac=r.acronym&&r.acronym!==r.resource_name?`<span class="acronym"> · ${esc(r.acronym)}</span>`:"";return `<article class="card"><div class="top"><h3>${esc(r.resource_name)}${ac}</h3><span class="tag">${esc(r.official_identity)}</span></div><p class="description">${esc(r.description)}</p><div class="chips">${split(r.research_areas).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div><div class="access"><span>Download: <b>${esc(r.free_download)}</b></span><span>Acesso programático: <b>${esc(r.programmatic_access)}</b></span><span>Brasil: <b>${esc(r.covers_brazil)}</b></span></div><details><summary>Ver informações técnicas e avaliação</summary><div class="details">${detail("Palavras-chave",r.keywords)}${detail("Produtos",r.data_product_types)}${detail("Formatos",r.data_formats)}${detail("Visualizações",r.visualization_types)}${detail("Protocolos e ferramentas",r.access_protocols)}${detail("Autenticação",r.authentication_required)}${detail("Resolução espacial",r.spatial_resolution)}${detail("Cobertura temporal",r.temporal_coverage)}${detail("Resolução temporal",r.temporal_resolution)}${detail("Fontes dos dados",r.data_sources)}${detail("Condições de acesso",r.access_conditions)}${detail("Licença",r.license)}${detail("Responsável",r.owner_or_manager)}${detail("Natureza institucional",r.institutional_status)}${detail("Utilidade acadêmica",r.academic_uses)}${detail("Limitações",r.limitations)}${detail("Tipo de evidência acadêmica",r.academic_evidence_type)}${detail("Síntese da evidência",r.academic_evidence_note)}${detail("Verificado em",r.last_verified)}</div><div class="source-links">${link("Acessar dados",r.data_access_url)}${link("Página oficial",r.homepage_url)}${link("Documentação de acesso",r.access_documentation_url)}${link("Evidência acadêmica/técnica",r.academic_evidence_url)}${link("Evidência oficial",r.verification_url)}</div></details></article>`}
-function render(){els.list.innerHTML=filtered.map(card).join("");els.empty.hidden=filtered.length>0;els.count.textContent=`${filtered.length} de ${all.length} fontes`}
-function filter(){const q=norm(els.q.value),fields=["resource_name","acronym","official_identity","description","research_areas","keywords","data_product_types","data_formats","visualization_types","geographic_coverage","data_sources","access_protocols","access_conditions","license","owner_or_manager","academic_uses","limitations","academic_evidence_note"];filtered=all.filter(r=>(!q||norm(fields.map(k=>r[k]).join(" ")).includes(q))&&(!els.area.value||split(r.research_areas).includes(els.area.value))&&(!els.brazil.value||r.covers_brazil===els.brazil.value)&&(!els.coverage.value||r.geographic_coverage===els.coverage.value)&&(!els.download.value||r.free_download===els.download.value)&&(!els.programmatic.value||r.programmatic_access===els.programmatic.value));render()}
-async function init(){try{const res=await fetch("data/data_resources.json");if(!res.ok)throw Error("Não foi possível carregar os dados.");all=await res.json();all.sort((a,b)=>a.resource_name.localeCompare(b.resource_name,"pt-BR"));filtered=[...all];opt(els.area,all.flatMap(r=>split(r.research_areas)));opt(els.coverage,all.map(r=>r.geographic_coverage));[els.q,els.area,els.brazil,els.coverage,els.download,els.programmatic].forEach(e=>e.addEventListener("input",filter));$("#clear").onclick=()=>{$("#filters").reset();filter();els.q.focus()};$("#n-total").textContent=all.length;$("#n-free").textContent=all.filter(r=>r.free_download==="sim").length;$("#n-api").textContent=all.filter(r=>r.programmatic_access==="sim").length;$("#n-br").textContent=all.filter(r=>["sim","parcial"].includes(r.covers_brazil)).length;$("#updated").textContent=all.map(r=>r.last_verified).filter(Boolean).sort().at(-1)||"não informada";render()}catch(e){els.list.innerHTML=`<div class="empty"><h3>Falha ao carregar o catálogo</h3><p>${esc(e.message)}</p></div>`}}
+const $ = selector => document.querySelector(selector);
+
+const els = {
+  q: $("#q"),
+  area: $("#area"),
+  brazil: $("#brazil"),
+  coverage: $("#coverage"),
+  download: $("#download"),
+  programmatic: $("#programmatic"),
+  list: $("#list"),
+  empty: $("#empty"),
+  count: $("#count"),
+  areaLinks: $("#area-links"),
+  heroSearch: $("#hero-search")
+};
+
+let all = [];
+let filtered = [];
+
+const split = value => String(value || "").split("|").map(item => item.trim()).filter(Boolean);
+const norm = value => String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const esc = value => String(value || "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+const opt = (element, values) => [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR")).forEach(value => element.add(new Option(value, value)));
+const detail = (label, value) => `<div class="detail"><strong>${label}</strong><span>${esc(value || "Não informado")}</span></div>`;
+const link = (label, url) => url && /^https:\/\//.test(url) ? `<a class="source" href="${esc(url)}" target="_blank" rel="noopener">${label} ↗</a>` : "";
+
+function card(resource) {
+  const acronym = resource.acronym && resource.acronym !== resource.resource_name ? `<span class="acronym"> · ${esc(resource.acronym)}</span>` : "";
+  return `<article class="card">
+    <div class="top"><h3>${esc(resource.resource_name)}${acronym}</h3><span class="tag">${esc(resource.official_identity)}</span></div>
+    <p class="description">${esc(resource.description)}</p>
+    <div class="chips">${split(resource.research_areas).map(area => `<span class="chip">${esc(area)}</span>`).join("")}</div>
+    <div class="access"><span>Download gratuito: <b>${esc(resource.free_download)}</b></span><span>API ou acesso automatizado: <b>${esc(resource.programmatic_access)}</b></span><span>Dados para o Brasil: <b>${esc(resource.covers_brazil)}</b></span></div>
+    <details><summary>Ver detalhes, evidências e limitações</summary>
+      <div class="details">
+        ${detail("Palavras-chave", resource.keywords)}
+        ${detail("Produtos", resource.data_product_types)}
+        ${detail("Formatos", resource.data_formats)}
+        ${detail("Visualizações", resource.visualization_types)}
+        ${detail("Protocolos e ferramentas", resource.access_protocols)}
+        ${detail("Autenticação", resource.authentication_required)}
+        ${detail("Resolução espacial", resource.spatial_resolution)}
+        ${detail("Cobertura temporal", resource.temporal_coverage)}
+        ${detail("Resolução temporal", resource.temporal_resolution)}
+        ${detail("Origem dos dados", resource.data_sources)}
+        ${detail("Condições de acesso", resource.access_conditions)}
+        ${detail("Licença", resource.license)}
+        ${detail("Responsável", resource.owner_or_manager)}
+        ${detail("Tipo de instituição", resource.institutional_status)}
+        ${detail("Utilidade acadêmica", resource.academic_uses)}
+        ${detail("Limitações", resource.limitations)}
+        ${detail("Tipo de evidência acadêmica", resource.academic_evidence_type)}
+        ${detail("Síntese da evidência", resource.academic_evidence_note)}
+        ${detail("Verificado em", resource.last_verified)}
+      </div>
+      <div class="source-links">
+        ${link("Acessar dados", resource.data_access_url)}
+        ${link("Página oficial", resource.homepage_url)}
+        ${link("Documentação de acesso", resource.access_documentation_url)}
+        ${link("Evidência acadêmica ou técnica", resource.academic_evidence_url)}
+        ${link("Evidência oficial", resource.verification_url)}
+      </div>
+    </details>
+  </article>`;
+}
+
+function render() {
+  els.list.innerHTML = filtered.map(card).join("");
+  els.empty.hidden = filtered.length > 0;
+  els.count.textContent = `${filtered.length} de ${all.length} fontes`;
+}
+
+function filter() {
+  const query = norm(els.q.value);
+  const fields = [
+    "resource_name", "acronym", "official_identity", "description", "research_areas",
+    "keywords", "data_product_types", "data_formats", "visualization_types",
+    "geographic_coverage", "data_sources", "access_protocols", "access_conditions",
+    "license", "owner_or_manager", "academic_uses", "limitations", "academic_evidence_note"
+  ];
+
+  filtered = all.filter(resource =>
+    (!query || norm(fields.map(key => resource[key]).join(" ")).includes(query)) &&
+    (!els.area.value || split(resource.research_areas).includes(els.area.value)) &&
+    (!els.brazil.value || resource.covers_brazil === els.brazil.value) &&
+    (!els.coverage.value || resource.geographic_coverage === els.coverage.value) &&
+    (!els.download.value || resource.free_download === els.download.value) &&
+    (!els.programmatic.value || resource.programmatic_access === els.programmatic.value)
+  );
+
+  render();
+}
+
+function goToCatalog() {
+  $("#catalogo").scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+function setQuery(value) {
+  els.q.value = value;
+  filter();
+  goToCatalog();
+}
+
+function renderAreas() {
+  const counts = new Map();
+  all.flatMap(resource => split(resource.research_areas)).forEach(area => counts.set(area, (counts.get(area) || 0) + 1));
+  els.areaLinks.innerHTML = [...counts.entries()]
+    .sort((a, b) => a[0].localeCompare(b[0], "pt-BR"))
+    .map(([area, count]) => `<button class="area-card" type="button" data-area="${esc(area)}"><strong>${esc(area)}</strong><span>${count} ${count === 1 ? "fonte" : "fontes"}</span></button>`)
+    .join("");
+
+  els.areaLinks.querySelectorAll("[data-area]").forEach(button => button.addEventListener("click", () => {
+    els.area.value = button.dataset.area;
+    filter();
+    goToCatalog();
+  }));
+}
+
+async function init() {
+  try {
+    const response = await fetch("data/data_resources.json");
+    if (!response.ok) throw Error("Não foi possível carregar os dados.");
+
+    all = await response.json();
+    all.sort((a, b) => a.resource_name.localeCompare(b.resource_name, "pt-BR"));
+    filtered = [...all];
+
+    opt(els.area, all.flatMap(resource => split(resource.research_areas)));
+    opt(els.coverage, all.map(resource => resource.geographic_coverage));
+    renderAreas();
+
+    [els.q, els.area, els.brazil, els.coverage, els.download, els.programmatic].forEach(element => element.addEventListener("input", filter));
+    els.heroSearch.addEventListener("submit", event => { event.preventDefault(); filter(); goToCatalog(); });
+    document.querySelectorAll("[data-query]").forEach(button => button.addEventListener("click", () => setQuery(button.dataset.query)));
+    $("#clear").addEventListener("click", () => {
+      $("#filters").reset();
+      els.q.value = "";
+      filter();
+      els.q.focus();
+    });
+
+    $("#n-total").textContent = all.length;
+    $("#n-free").textContent = all.filter(resource => resource.free_download === "sim").length;
+    $("#n-api").textContent = all.filter(resource => resource.programmatic_access === "sim").length;
+    $("#n-br").textContent = all.filter(resource => ["sim", "parcial"].includes(resource.covers_brazil)).length;
+    $("#updated").textContent = all.map(resource => resource.last_verified).filter(Boolean).sort().at(-1) || "não informada";
+    render();
+  } catch (error) {
+    els.list.innerHTML = `<div class="empty"><h3>Falha ao carregar o catálogo</h3><p>${esc(error.message)}</p></div>`;
+  }
+}
+
 init();
