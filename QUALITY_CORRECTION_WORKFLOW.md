@@ -9,19 +9,20 @@ O princípio central é simples: **controle de processo não substitui verifica�
 ## Regras de prioridade
 
 1. corrigir primeiro contradições entre documentos, contratos e validadores;
-2. completar a matriz de migração antes de revisar os 35 casos pendentes;
-3. revisar as fontes atuais antes de expandir o catálogo;
-4. manter melhorias didáticas e de resolução como enriquecimentos não bloqueantes;
-5. reavaliar a ordem ao final de cada ciclo, usando evidência de custo, risco e dependência;
-6. não alterar versão, CSV canônico ou DOI enquanto os respectivos portões estiverem bloqueados.
+2. definir os critérios de seleção antes de ampliar a matriz ou a lista de fontes;
+3. completar a matriz de migração antes de revisar os 35 casos pendentes;
+4. revisar as fontes atuais antes de expandir o catálogo;
+5. manter melhorias didáticas e de resolução como enriquecimentos não bloqueantes;
+6. reavaliar a ordem ao final de cada ciclo, usando evidência de custo, risco e dependência;
+7. não alterar versão, CSV canônico ou DOI enquanto os respectivos portões estiverem bloqueados.
 
 ## Ordem operacional revisada
 
 | Ordem | Ciclo | Prioridade | Escopo | Estado inicial | Critério de conclusão |
 |---:|---|---|---|---|---|
 | 1 | QC0 | P0 | Alinhar as 14 regras semânticas entre auditoria, JSON e CI | em desenvolvimento | contrato e teste exigem o mesmo conjunto exato de regras |
-| 2 | DATA1-BX | P0 | Expandir a matriz para todos os campos cuja normalização foi prometida | planejado | 51 linhas com propostas ou estados explícitos para todos os campos-alvo |
-| 3 | SELECT1 | P0 | Definir inclusão, exclusão, duplicidade e análise de lacunas | em desenvolvimento | política versionada e validada pelo CI |
+| 2 | SELECT1 | P0 | Definir inclusão, exclusão, duplicidade e análise de lacunas | em desenvolvimento | política versionada e validada pelo CI |
+| 3 | DATA1-BX | P0 | Expandir a matriz para todos os campos cuja normalização foi prometida | planejado | 51 linhas com propostas ou estados explícitos para todos os campos-alvo |
 | 4 | DATA1-BR | P0 | Revisar os 35 casos pendentes contra documentação oficial | bloqueado por DATA1-BX | nenhuma decisão pendente ou inferida sem evidência |
 | 5 | DATA1-C | P0 | Migrar atomicamente para 38 campos | bloqueado | 51 IDs preservados, zero perda e versão 0.8.0 validada |
 | 6 | DATA1-D | P0 | Ativar validações semânticas no CSV final | planejado | as 14 regras bloqueiam estados inconsistentes |
@@ -40,6 +41,19 @@ Correções imediatas:
 - adicionar ao JSON as regras sobre `visualization_types`, unicidade/trim de listas e DOI de evidência;
 - impedir que o validador aceite apenas “dez ou mais” regras;
 - manter CSV, CFF, versão e interface inalterados.
+
+## SELECT1 — critérios de seleção e cobertura
+
+A política de seleção deve responder:
+
+- o que conta como fonte elegível;
+- o que deve ser excluído;
+- como reconhecer duplicidades e recursos sucessores;
+- como tratar versões regionais, software e catálogos agregadores;
+- como registrar candidatos sem colocá-los imediatamente no CSV;
+- como medir lacunas temáticas, geográficas, institucionais e de acesso.
+
+A expansão permanecerá bloqueada até essa política estar ativa.
 
 ## DATA1-BX — completar a matriz antes da revisão externa
 
@@ -60,19 +74,6 @@ Antes de BR1, a matriz deverá ser ampliada com estes campos e com estados expl�
 - ausência de evidência → `unknown`, revisão pendente;
 - texto científico que não cabe em vocabulário → preservado em campo narrativo, sem perda;
 - nenhuma transformação automática apenas por correspondência de palavras.
-
-## SELECT1 — critérios de seleção e cobertura
-
-A política de seleção deve responder:
-
-- o que conta como fonte elegível;
-- o que deve ser excluído;
-- como reconhecer duplicidades e recursos sucessores;
-- como tratar versões regionais, software e catálogos agregadores;
-- como registrar candidatos sem colocá-los imediatamente no CSV;
-- como medir lacunas temáticas, geográficas, institucionais e de acesso.
-
-A expansão permanecerá bloqueada até essa política estar ativa.
 
 ## DATA1-BR e DATA2 — revisão científica
 
