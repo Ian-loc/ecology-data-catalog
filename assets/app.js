@@ -17,7 +17,8 @@ const els = {
   advancedFilters: $("#advanced-filters"),
   advancedCount: $("#advanced-count"),
   areaLinks: $("#area-links"),
-  heroSearch: $("#hero-search")
+  heroSearch: $("#hero-search"),
+  catalogHeading: $("#catalog-heading")
 };
 
 let all = [];
@@ -46,13 +47,15 @@ const esc = value => String(value || "").replace(/[&<>"']/g, char => ({"&":"&amp
 const validUrl = value => /^https:\/\//.test(String(value || ""));
 const formats = resource => [...new Set(split(resource.data_formats).map(value => value.split(";")[0].trim()).filter(value => value && !IGNORED_FORMATS.has(value.toLowerCase())))];
 const searchText = resource => norm(SEARCH_FIELDS.map(key => resource[key]).join(" "));
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const domId = value => String(value || "resource").replace(/[^a-zA-Z0-9_-]/g, "-");
 
 function detail(label, value) {
   return `<div class="detail"><strong>${esc(label)}</strong><span>${esc(value || "Não informado")}</span></div>`;
 }
 
 function actionLink(label, url, className = "action-secondary") {
-  return validUrl(url) ? `<a class="${className}" href="${esc(url)}" target="_blank" rel="noopener">${esc(label)} <span aria-hidden="true">↗</span></a>` : "";
+  return validUrl(url) ? `<a class="${className}" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(label)} <span aria-hidden="true">↗</span><span class="sr-only"> (abre em nova aba)</span></a>` : "";
 }
 
 function statusClass(value) {
@@ -75,7 +78,7 @@ function statusSymbol(value) {
 
 function statusBadge(label, value) {
   const readable = ENUM_LABELS[value] || value || "Desconhecido";
-  return `<div class="status-badge ${statusClass(value)}"><span class="status-symbol" aria-hidden="true">${statusSymbol(value)}</span><span><small>${esc(label)}</small><strong>${esc(readable)}</strong></span></div>`;
+  return `<div class="status-badge ${statusClass(value)}" role="group" aria-label="${esc(label)}: ${esc(readable)}"><span class="status-symbol" aria-hidden="true">${statusSymbol(value)}</span><span><small>${esc(label)}</small><strong>${esc(readable)}</strong></span></div>`;
 }
 
 function detailGroup(title, content, links = "") {
@@ -119,6 +122,8 @@ function optionLabel(element) {
 }
 
 function card(resource) {
+  const cardId = `resource-${domId(resource.resource_id)}`;
+  const descriptionId = `${cardId}-description`;
   const acronym = resource.acronym && resource.acronym !== resource.resource_name ? `<span class="acronym">${esc(resource.acronym)}</span>` : "";
   const areas = split(resource.research_areas);
   const areaChips = areas.map(area => `<span class="chip">${esc(area)}</span>`).join("");
@@ -175,12 +180,12 @@ function card(resource) {
     detail("Identificador interno", resource.resource_id)
   );
 
-  return `<article class="card">
+  return `<article class="card" role="listitem" aria-labelledby="${cardId}" aria-describedby="${descriptionId}">
     <header class="card-header">
-      <div class="card-title"><div class="title-line"><h3>${esc(resource.resource_name)}</h3>${acronym}</div><p class="identity">${esc(resource.official_identity)}</p></div>
+      <div class="card-title"><div class="title-line"><h3 id="${cardId}">${esc(resource.resource_name)}</h3>${acronym}</div><p class="identity">${esc(resource.official_identity)}</p></div>
       <span class="verified-date">Verificado em ${esc(resource.last_verified)}</span>
     </header>
-    <p class="description">${esc(resource.description)}</p>
+    <p class="description" id="${descriptionId}">${esc(resource.description)}</p>
     <div class="chips" aria-label="Áreas de pesquisa">${areaChips}</div>
     <div class="status-grid" aria-label="Resumo de acesso">
       ${statusBadge("Download gratuito", resource.free_download)}
@@ -196,7 +201,7 @@ function card(resource) {
       ${actionLink("Site oficial", resource.homepage_url)}
     </div>
     <details class="card-details">
-      <summary>Ver detalhes técnicos, evidências e avaliação</summary>
+      <summary aria-label="Ver detalhes técnicos, evidências e avaliação de ${esc(resource.resource_name)}">Ver detalhes técnicos, evidências e avaliação</summary>
       <div class="detail-groups">${accessGroup}${coverageGroup}${productsGroup}${academicGroup}${evidenceGroup}${evaluationGroup}</div>
     </details>
   </article>`;
@@ -230,9 +235,11 @@ function sortResults(query) {
 }
 
 function render() {
+  els.list.setAttribute("aria-busy", "true");
   els.list.innerHTML = filtered.map(card).join("");
   els.empty.hidden = filtered.length > 0;
   els.count.textContent = `${filtered.length} ${filtered.length === 1 ? "fonte encontrada" : "fontes encontradas"} · ${all.length} no catálogo`;
+  els.list.setAttribute("aria-busy", "false");
 }
 
 function renderActiveFilters() {
@@ -265,9 +272,10 @@ function renderActiveFilters() {
   els.activeFilters.innerHTML = items.length ? `<span>Filtros ativos:</span>${items.map(item => `<button type="button" data-remove="${item.key}" aria-label="Remover ${esc(item.label)}">${esc(item.label)} <b aria-hidden="true">×</b></button>`).join("")}` : "";
   els.activeFilters.querySelectorAll("[data-remove]").forEach(button => button.addEventListener("click", () => {
     const key = button.dataset.remove;
-    if (key === "q") els.q.value = "";
-    else els[key].value = "";
+    const target = key === "q" ? els.q : els[key];
+    target.value = "";
     filter();
+    target.focus();
   }));
 }
 
@@ -327,7 +335,8 @@ function filter(syncUrl = true) {
 }
 
 function goToCatalog() {
-  $("#catalogo").scrollIntoView({behavior: "smooth", block: "start"});
+  els.catalogHeading.scrollIntoView({behavior: reducedMotion() ? "auto" : "smooth", block: "start"});
+  els.catalogHeading.focus({preventScroll: true});
 }
 
 function setQuery(value) {
@@ -342,6 +351,7 @@ function renderAreas() {
     .sort((a, b) => a[0].localeCompare(b[0], "pt-BR"))
     .map(([area, count]) => `<button class="area-card" type="button" data-area="${esc(area)}" aria-pressed="false"><strong>${esc(area)}</strong><span>${count} ${count === 1 ? "fonte" : "fontes"}</span></button>`)
     .join("");
+  els.areaLinks.setAttribute("aria-busy", "false");
 
   els.areaLinks.querySelectorAll("[data-area]").forEach(button => button.addEventListener("click", () => {
     els.area.value = button.dataset.area;
@@ -390,6 +400,9 @@ async function init() {
     $("#updated").textContent = all.map(resource => resource.last_verified).filter(Boolean).sort().at(-1) || "não informada";
     filter(false);
   } catch (error) {
+    els.areaLinks.setAttribute("aria-busy", "false");
+    els.list.setAttribute("aria-busy", "false");
+    els.count.textContent = "Falha ao carregar o catálogo";
     els.list.innerHTML = `<div class="empty"><h3>Falha ao carregar o catálogo</h3><p>${esc(error.message)}</p></div>`;
   }
 }
