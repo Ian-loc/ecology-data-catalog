@@ -9,6 +9,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = ROOT / "QUALITY_CORRECTION_WORKFLOW.md"
+IMPLEMENTATION_PATH = ROOT / "IMPLEMENTATION_WORKFLOW.md"
+STATUS_PATH = ROOT / "WORKFLOW_STATUS.md"
 SELECTION_PATH = ROOT / "SELECTION_AND_COVERAGE_POLICY.md"
 SCHEMA_PATH = ROOT / "schema" / "v0.8.0-draft.json"
 CSV_PATH = ROOT / "data" / "data_resources.csv"
@@ -32,7 +34,7 @@ EXPECTED_RULES = {
     "placeholders_must_not_coexist_with_positive_values",
 }
 REQUIRED_CYCLES = [
-    "QC0", "DATA1-BX", "SELECT1", "DATA1-BR", "DATA1-C", "DATA1-D",
+    "QC0", "SELECT1", "DATA1-BX", "DATA1-BR", "DATA1-C", "DATA1-D",
     "DATA2", "UX5", "RELEASE2", "DOI", "RES1", "EDU1",
 ]
 
@@ -41,7 +43,22 @@ def fail(message: str) -> None:
     raise SystemExit(f"ERRO: {message}")
 
 
-for path in (WORKFLOW_PATH, SELECTION_PATH, SCHEMA_PATH, CSV_PATH, CITATION_PATH, READINESS_PATH):
+def require_cycle_order(text: str, filename: str) -> None:
+    positions: list[int] = []
+    for cycle in REQUIRED_CYCLES:
+        marker = f"| {cycle} |"
+        position = text.find(marker)
+        if position < 0:
+            fail(f"{filename} não contém ciclo obrigatório: {cycle}")
+        positions.append(position)
+    if positions != sorted(positions):
+        fail(f"ordem operacional dos ciclos está divergente em {filename}")
+
+
+for path in (
+    WORKFLOW_PATH, IMPLEMENTATION_PATH, STATUS_PATH, SELECTION_PATH,
+    SCHEMA_PATH, CSV_PATH, CITATION_PATH, READINESS_PATH,
+):
     if not path.exists():
         fail(f"arquivo obrigatório ausente: {path.relative_to(ROOT)}")
 
@@ -51,15 +68,10 @@ if len(rules) != 14 or len(set(rules)) != 14 or set(rules) != EXPECTED_RULES:
     fail("contrato 0.8.0 não contém exatamente as 14 regras aprovadas")
 
 workflow = WORKFLOW_PATH.read_text(encoding="utf-8")
-positions: list[int] = []
-for cycle in REQUIRED_CYCLES:
-    marker = f"| {cycle} |"
-    position = workflow.find(marker)
-    if position < 0:
-        fail(f"workflow não contém ciclo obrigatório: {cycle}")
-    positions.append(position)
-if positions != sorted(positions):
-    fail("ordem operacional dos ciclos está divergente")
+implementation = IMPLEMENTATION_PATH.read_text(encoding="utf-8")
+status = STATUS_PATH.read_text(encoding="utf-8")
+require_cycle_order(workflow, "QUALITY_CORRECTION_WORKFLOW.md")
+require_cycle_order(implementation, "IMPLEMENTATION_WORKFLOW.md")
 
 for token in (
     "não bloqueante para v1.0.0 e DOI",
@@ -71,6 +83,14 @@ for token in (
 ):
     if token not in workflow:
         fail(f"workflow sem requisito: {token}")
+
+for token in (
+    "DATA1-BX antes de BR1",
+    "Novas fontes permanecem fora do CSV",
+    "RES1 e EDU1",
+):
+    if token not in status:
+        fail(f"WORKFLOW_STATUS.md sem estado crítico: {token}")
 
 selection = SELECTION_PATH.read_text(encoding="utf-8")
 for section in (
@@ -102,6 +122,6 @@ if readiness.get("doi_allowed") is not False:
 
 print(
     "OK: correções de qualidade validadas — 14 regras alinhadas; "
-    "seleção documentada; DATA1-BX precede BR1; RES1 e EDU1 não bloqueantes; "
-    "CSV 51 × 34 e versão 0.7.0 preservados"
+    "seleção documentada; SELECT1 e DATA1-BX precedem BR1; "
+    "RES1 e EDU1 não bloqueantes; CSV 51 × 34 e versão 0.7.0 preservados"
 )
