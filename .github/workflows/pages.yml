@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Validar workflow de correções de qualidade
+        run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar CSV e gerar artefatos
         run: python3 scripts/build_catalog.py
       - name: Validar proposta de esquema
@@ -24,8 +26,6 @@ jobs:
         run: python3 scripts/validate_migration_matrix.py
       - name: Validar objetivos finais e prontidão para DOI
         run: python3 scripts/validate_doi_readiness.py
-      - name: Validar workflow de correções de qualidade
-        run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar interface estática
         run: |
           python3 scripts/validate_frontend.py
