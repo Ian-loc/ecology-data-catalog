@@ -31,8 +31,9 @@ Melhorar a descoberta e comparação de fontes, corrigir ambiguidades documentai
 | UX3 | Redesenho dos cards | validado e documentado | PR #9 e run 29701341054 concluídos |
 | UX4 | Acessibilidade, responsividade e desempenho | validado e documentado | PR #11 e run 29702280394 concluídos |
 | DATA1-A | Auditoria e projeto do esquema | validado e documentado | PR #13 e run 29702732587 concluídos |
-| DATA1-B | Matriz de migração | em desenvolvimento | 51 decisões, confiança, justificativas e validação cruzada |
-| DATA1-C | Migração para 38 campos | bloqueado | depende de DATA1-B validado e revisão das decisões médias |
+| DATA1-B | Matriz de migração | validado e documentado | PR #15 e run 29703654373 concluídos |
+| DATA1-BR | Revisão dos casos pendentes | autorizado | resolver 35 casos com evidência e atualizar a matriz |
+| DATA1-C | Migração para 38 campos | bloqueado | depende da resolução integral do DATA1-BR |
 | DATA1-D | Validação semântica e interface | planejado | regras cruzadas e exibição dos 38 campos aprovadas |
 | DATA2 | Revisão das 51 fontes | planejado | lotes auditáveis com evidência, diff, validação e changelog |
 | RELEASE1 | Fechamento documental | validado e documentado | título, ORCID, licenças e CFF integrados no PR #5 |
@@ -81,26 +82,27 @@ Melhorar a descoberta e comparação de fontes, corrigir ambiguidades documentai
 8. não haverá campo DOI genérico para fontes;
 9. a migração alvo é 0.8.0, ainda sem DOI.
 
-## DATA1-B — matriz de migração
-
-### Entregas implementadas na branch
+## DATA1-B — resultado
 
 - [x] matriz com os 51 `resource_id` em `migration/data1b_migration_matrix.csv`;
 - [x] propostas de `resource_type` e `geographic_scope` para todas as fontes;
 - [x] formatos, protocolos, ferramentas e situação institucional normalizados;
-- [x] separação entre decisões de alta confiança e revisão manual;
-- [x] 24 registros de alta confiança;
-- [x] 27 registros de confiança média;
+- [x] 24 decisões de alta confiança;
+- [x] 27 decisões de confiança média;
 - [x] nenhuma decisão de baixa confiança;
+- [x] 16 registros sem ressalvas prontos para futura migração;
+- [x] 35 registros dependentes de revisão manual;
 - [x] exceções explícitas para `other_documented` e recurso global não geográfico;
 - [x] URLs de citação vazias até confirmação oficial específica;
 - [x] documentação em `migration/README.md`;
 - [x] validador em `scripts/validate_migration_matrix.py`;
 - [x] execução do validador adicionada ao GitHub Actions;
+- [x] confiança e autorização de migração tratadas como estados independentes;
+- [x] PR #15 e run `29703654373` concluídos;
+- [x] commit `2081084c6f59e6d54acff49cc3ee9db456c31447` integrado;
+- [x] Drive atualizado;
 - [x] CSV canônico preservado com 51 fontes e 34 campos;
-- [ ] validar em pull request;
-- [ ] integrar após CI aprovado;
-- [ ] registrar no Drive.
+- [x] versão formal preservada em 0.7.0.
 
 ### Regra de não duplicação
 
@@ -113,19 +115,33 @@ A matriz registra somente decisões propostas. Valores atuais, nomes e evidênci
 - `institutional_status` → situação atual;
 - `verification_url` → evidência oficial.
 
-### Regra de revisão
+### Regra de confiança e autorização
 
-1. `alta` pode ser preparada para a migração DATA1-C;
-2. `média` exige revisão manual antes da aplicação;
-3. `baixa` bloqueia integração da matriz;
+1. confiança `alta` descreve a robustez da classificação, mas não autoriza migração quando existe exceção;
+2. confiança `média` exige revisão manual;
+3. confiança `baixa` bloqueia integração da matriz;
 4. qualquer `other_documented` exige exceção codificada e revisão manual;
-5. nenhuma decisão é aplicada ao CSV no DATA1-B.
+5. somente registros `pronto_para_migração` podem alimentar automaticamente o DATA1-C;
+6. nenhuma decisão foi aplicada ao CSV no DATA1-B.
+
+## DATA1-BR — revisão dos 35 casos pendentes
+
+Para cada registro marcado como `revisão_manual`:
+
+1. confrontar a proposta com documentação oficial atual;
+2. substituir `unknown`, `varies_by_dataset` e `other_documented` quando houver informação verificável;
+3. confirmar ou corrigir tipo funcional, escala e situação institucional;
+4. separar formatos, protocolos e ferramentas sem perda de conteúdo;
+5. registrar URL oficial de citação somente quando houver orientação específica;
+6. atualizar confiança, justificativa, exceções e `migration_status`;
+7. executar novamente `scripts/validate_migration_matrix.py`;
+8. impedir o início do DATA1-C enquanto qualquer caso permanecer pendente.
 
 ## DATA1-C — migração atômica 0.8.0
 
-Somente após DATA1-B:
+Somente após DATA1-BR:
 
-1. revisar os 27 registros médios e resolver todas as exceções;
+1. exigir 51 registros com `migration_status = pronto_para_migração`;
 2. atualizar o cabeçalho para 38 campos;
 3. migrar as 51 linhas em uma única branch;
 4. atualizar `CODEBOOK.md`, metodologia, scripts e interface;
@@ -177,8 +193,8 @@ Implementar regras que bloqueiem:
 
 ## Ordem operacional atual
 
-1. validar e integrar DATA1-B;
-2. revisar as 27 decisões médias;
+1. revisar os 35 casos do DATA1-BR;
+2. validar e integrar a matriz sem pendências;
 3. migrar atomicamente para 0.8.0 em DATA1-C;
 4. concluir validações e interface em DATA1-D;
 5. executar DATA2 em lotes;

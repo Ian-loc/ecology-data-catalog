@@ -33,8 +33,9 @@ Os estados usados são: `planejado`, `em desenvolvimento`, `em revisão`, `integ
 | UX4 | Acessibilidade, responsividade e desempenho | validado e documentado | PR #11; run 29702280394; Drive atualizado |
 | UX4 | Confirmar publicação da interface | bloqueado | site deve exibir commit compatível com `70d2cb868054c551c9aaf2d41ea9fbdb8eef58f1` ou posterior |
 | DATA1-A | Auditoria e projeto do esquema 0.8.0 | validado e documentado | PR #13; run 29702732587; Drive atualizado |
-| DATA1-B | Matriz de migração das 51 fontes | em desenvolvimento | matriz, documentação e validador na branch; faltam PR, CI, integração e Drive |
-| DATA1-C | Migração atômica para 38 campos | bloqueado | depende da integração e revisão da matriz DATA1-B |
+| DATA1-B | Matriz de migração das 51 fontes | validado e documentado | PR #15; run 29703654373; Drive atualizado |
+| DATA1-BR | Revisão dos 35 casos pendentes | autorizado | resolver confiança média e exceções antes da migração |
+| DATA1-C | Migração atômica para 38 campos | bloqueado | depende da resolução dos 35 casos em revisão manual |
 | DATA1-D | Validações cruzadas do esquema 0.8.0 | planejado | inconsistências semânticas bloqueiam o build |
 | DATA2 | Revisar as 51 fontes em lotes auditáveis | planejado | cada lote tem evidência, diff, validação e changelog |
 | RELEASE1 | Título, ORCID, licenças e CFF | validado e documentado | PR #5 integrado, CI aprovado e Drive atualizado |
@@ -68,22 +69,26 @@ Os estados usados são: `planejado`, `em desenvolvimento`, `em revisão`, `integ
 - **Versão:** permanece 0.7.0;
 - **DOI:** permanece bloqueado.
 
-## Ciclo atual — DATA1-B
+## DATA1-B — resultado
 
-- **Branch:** `agent/data1b-migration-matrix`;
+- **PR:** #15 — `Construir matriz de migração DATA1-B`;
+- **Commit integrado:** `2081084c6f59e6d54acff49cc3ee9db456c31447`;
+- **Validação:** GitHub Actions run `29703654373`, sucesso;
 - **Matriz:** `migration/data1b_migration_matrix.csv`;
 - **Documentação:** `migration/README.md`;
 - **Validador:** `scripts/validate_migration_matrix.py`;
 - **Cobertura:** 51 decisões e 51 `resource_id` preservados;
-- **Confiança:** 24 decisões altas e 27 médias;
-- **Revisão:** todo valor `other_documented` exige exceção e revisão manual;
+- **Confiança:** 24 decisões altas, 27 médias e nenhuma baixa;
+- **Autorização:** 16 registros prontos e 35 em revisão manual;
+- **Proteção:** confiança e autorização de migração são estados independentes; exceções e `other_documented` bloqueiam aplicação automática;
 - **Citação:** URLs permanecem vazias até confirmação oficial específica;
 - **CSV:** não alterado; continua com 51 fontes e 34 campos;
+- **Drive:** fase registrada na aba `project_changelog`;
 - **Versão:** permanece 0.7.0;
-- **Pendente:** PR, CI, integração e registro no Drive.
+- **DOI:** permanece bloqueado.
 
-## Próxima etapa após DATA1-B
+## Próximo ciclo autorizado
 
-A migração DATA1-C somente poderá começar após a integração da matriz e revisão dos 27 registros marcados como `revisão_manual`.
+Executar **DATA1-BR — revisão dos 35 registros marcados como `revisão_manual`**. Cada caso deve ser resolvido com evidência oficial suficiente, remoção ou especificação de placeholders e atualização da matriz. A migração DATA1-C não está autorizada enquanto houver casos pendentes.
 
 Consulte `IMPLEMENTATION_WORKFLOW.md`, `DATA1_SCHEMA_AUDIT.md` e `migration/README.md` para a sequência completa.
