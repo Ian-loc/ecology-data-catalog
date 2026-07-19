@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
-"""Valida o CSV canônico e gera o JSON consumido pelo site."""
+"""Valida o CSV canônico e gera os artefatos consumidos pelo site."""
 from __future__ import annotations
+
 import csv
 import json
+import os
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 CSV_PATH = ROOT / "data" / "data_resources.csv"
 JSON_PATH = ROOT / "data" / "data_resources.json"
+BUILD_META_PATH = ROOT / "data" / "build-meta.json"
+CITATION_PATH = ROOT / "CITATION.cff"
 
 REQUIRED_COLUMNS = [
     "resource_id", "resource_name", "acronym", "official_identity", "description",
@@ -47,16 +52,30 @@ RESEARCH_AREAS = {
 }
 DATE_RE = re.compile(r"^20\d{2}-\d{2}-\d{2}$")
 ID_RE = re.compile(r"^DR\d{4}$")
+VERSION_RE = re.compile(r"^version:\s*[\"']?([^\"'\s]+)", re.MULTILINE)
+
 
 def is_https(value: str) -> bool:
     parsed = urlparse(value)
     return parsed.scheme == "https" and bool(parsed.netloc)
 
+
 def fail(message: str) -> None:
     raise SystemExit(f"ERRO: {message}")
 
+
 def split_values(value: str) -> list[str]:
     return [item.strip() for item in value.split("|") if item.strip()]
+
+
+def read_version() -> str:
+    if not CITATION_PATH.exists():
+        fail("CITATION.cff ausente")
+    match = VERSION_RE.search(CITATION_PATH.read_text(encoding="utf-8"))
+    if not match:
+        fail("versão não localizada em CITATION.cff")
+    return match.group(1)
+
 
 with CSV_PATH.open(encoding="utf-8-sig", newline="") as handle:
     reader = csv.DictReader(handle)
@@ -113,4 +132,20 @@ JSON_PATH.write_text(
     json.dumps(rows, ensure_ascii=False, indent=2) + "\n",
     encoding="utf-8",
 )
-print(f"OK: {len(rows)} fontes e {len(REQUIRED_COLUMNS)} variáveis validadas; JSON gerado")
+
+build_meta = {
+    "version": read_version(),
+    "commit": os.environ.get("GITHUB_SHA", "local"),
+    "built_at": datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
+    "records": len(rows),
+    "fields": len(REQUIRED_COLUMNS),
+}
+BUILD_META_PATH.write_text(
+    json.dumps(build_meta, ensure_ascii=False, indent=2) + "\n",
+    encoding="utf-8",
+)
+
+print(
+    f"OK: {len(rows)} fontes e {len(REQUIRED_COLUMNS)} variáveis validadas; "
+    f"JSON e metadados de build gerados para a versão {build_meta['version']}"
+)
