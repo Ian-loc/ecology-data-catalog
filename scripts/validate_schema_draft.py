@@ -35,6 +35,22 @@ EXPECTED_SCOPES = {
     "local", "subnational", "national", "regional", "continental",
     "global", "variable", "not_applicable",
 }
+EXPECTED_CROSS_VALIDATION_RULES = {
+    "publishing_software_requires_not_applicable_geography",
+    "global_scope_normally_covers_brazil",
+    "not_applicable_scope_requires_not_applicable_brazil",
+    "programmatic_yes_requires_protocol_or_tool",
+    "programmatic_no_forbids_positive_protocol_without_exception",
+    "authentication_yes_requires_access_condition",
+    "free_download_yes_requires_data_access_url",
+    "formats_must_not_contain_protocols_or_visualizations",
+    "visualizations_must_not_contain_formats_or_protocols",
+    "protocols_must_not_contain_client_tools",
+    "citation_guidance_url_must_be_https",
+    "multivalued_items_must_be_unique_and_trimmed",
+    "academic_evidence_doi_is_not_source_identifier",
+    "placeholders_must_not_coexist_with_positive_values",
+}
 
 
 def fail(message: str) -> None:
@@ -88,8 +104,14 @@ for required in (
         fail(f"vocabulário inválido ou duplicado: {required}")
 
 rules = schema.get("cross_validation_rules", [])
-if len(rules) < 10 or len(rules) != len(set(rules)):
-    fail("regras cruzadas insuficientes ou duplicadas")
+if not isinstance(rules, list) or len(rules) != 14:
+    fail("cross_validation_rules deve conter exatamente 14 regras")
+if len(rules) != len(set(rules)):
+    fail("cross_validation_rules contém regras duplicadas")
+if set(rules) != EXPECTED_CROSS_VALIDATION_RULES:
+    missing = sorted(EXPECTED_CROSS_VALIDATION_RULES.difference(rules))
+    extra = sorted(set(rules).difference(EXPECTED_CROSS_VALIDATION_RULES))
+    fail(f"contrato semântico divergente; ausentes={missing}; extras={extra}")
 
 policy = schema.get("migration_policy", {})
 if policy.get("automatic_migration_allowed") is not False:
@@ -119,4 +141,4 @@ for token in (
     if token not in text:
         fail(f"auditoria não documenta requisito: {token}")
 
-print("OK: proposta 0.8.0 válida; CSV 0.7.0 preservado com 51 fontes e 34 campos")
+print("OK: proposta 0.8.0 válida; 14 regras semânticas alinhadas; CSV 0.7.0 preservado com 51 fontes e 34 campos")
