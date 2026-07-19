@@ -1,5 +1,19 @@
 # Histórico de mudanças
 
+## Não lançado — UX1 e preparação documental
+
+- adotado o título oficial **Ecology Data Catalog: catálogo de fontes de dados ambientais para pesquisa, ensino e extensão**;
+- reorganizada a página inicial para apresentar busca, benefício e exploração temática antes da lista completa;
+- criada navegação consistente entre catálogo, análise e documentação;
+- adicionados atalhos de busca e exploração dinâmica pelas áreas de pesquisa;
+- revisados rótulos de busca, filtros, indicadores e detalhes técnicos;
+- reduzida a competição entre ações no hero e refinada a hierarquia visual;
+- adicionado ORCID do autor ao `CITATION.cff`, preservando a versão 0.7.0;
+- criada `LICENSE-DATA.md` para separar CC BY 4.0 da licença MIT do código;
+- criado workflow explícito para UX, revisão científica, release estável e DOI;
+- adicionadas validações automáticas da estrutura HTML e da sintaxe JavaScript;
+- mantidos `v1.0.0` e DOI bloqueados até o fechamento técnico, científico e documental.
+
 ## Não lançado — fechamento operacional
 
 - adicionada identificação verificável do build com versão, commit, data, número de fontes e número de variáveis;
