@@ -20,6 +20,8 @@ jobs:
         run: python3 scripts/build_catalog.py
       - name: Validar proposta de esquema
         run: python3 scripts/validate_schema_draft.py
+      - name: Validar matriz de migração DATA1-B
+        run: python3 scripts/validate_migration_matrix.py
       - name: Validar interface estática
         run: |
           python3 scripts/validate_frontend.py
