@@ -16,8 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validar CSV e gerar JSON
+      - name: Validar CSV e gerar artefatos
         run: python3 scripts/build_catalog.py
+      - name: Validar interface estática
+        run: |
+          python3 scripts/validate_frontend.py
+          node --check assets/app.js
+          node --check assets/analytics.js
+          node --check assets/build-meta.js
   deploy:
     if: github.event_name != 'pull_request'
     needs: validate
@@ -27,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Gerar JSON do site
+      - name: Gerar artefatos do site
         run: python3 scripts/build_catalog.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
