@@ -6,7 +6,8 @@
 - propostas classificações para `resource_type` e `geographic_scope` em todos os registros;
 - propostas normalizações de formatos, protocolos, ferramentas e situação institucional;
 - mantidas vazias as URLs de orientação de citação até confirmação oficial específica;
-- classificadas 24 decisões como alta confiança e 27 como revisão manual;
+- classificadas 24 decisões como alta confiança e 27 como confiança média;
+- separados 16 registros prontos para futura migração e 35 dependentes de revisão manual;
 - nenhuma decisão de baixa confiança foi aceita;
 - adicionadas exceções codificadas para recursos híbridos e valores `other_documented`;
 - criado `scripts/validate_migration_matrix.py` para conferir a matriz contra o CSV e o contrato 0.8.0;
