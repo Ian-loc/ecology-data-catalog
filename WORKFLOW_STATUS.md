@@ -11,20 +11,23 @@ Uma tarefa só é considerada concluída quando estiver:
 5. publicada, quando afetar o site;
 6. registrada no changelog do GitHub e no registro executivo do Google Drive.
 
-Os estados usados são: `planejado`, `em desenvolvimento`, `em revisão`, `integrado`, `validado`, `publicado`, `documentado` e `concluído`.
+Os estados usados são: `planejado`, `em desenvolvimento`, `em revisão`, `integrado`, `validado`, `publicado`, `documentado`, `bloqueado` e `concluído`.
 
-## Limitação atual
+## Limitações atuais
 
-GitHub Issues está desativado neste repositório. O backlog abaixo é, portanto, o registro versionado autoritativo das pendências até que Issues seja habilitado.
+- GitHub Issues está desativado neste repositório; este arquivo é o backlog versionado autoritativo.
+- O conector disponível confirma runs associados a pull requests, mas não expõe o run disparado por push na `main`. Por isso, o deploy posterior ao merge não pode ser marcado como verificado apenas com a evidência atualmente observável.
 
 ## Backlog
 
-| Prioridade | Frente | Estado | Critério de conclusão |
+| Prioridade | Frente | Estado | Evidência ou critério de conclusão |
 |---|---|---|---|
-| P0 | Identificar versão e commit efetivamente publicados | em desenvolvimento | site exibe versão, commit e dimensões produzidos pelo próprio deploy |
-| P0 | Impedir versionamento de JSON e metadados derivados | em desenvolvimento | `.gitignore` cobre os artefatos gerados |
-| P0 | Confirmar deploy posterior ao merge | planejado | workflow da `main` conclui validação e deploy com sucesso |
-| P0 | Alinhar registro executivo no Drive | planejado | Drive registra versão, commit, PR, workflow run e situação do deploy |
+| P0 | Gerar identificação verificável do build | integrado | `build-meta.json` é gerado com versão, commit, data, fontes e campos |
+| P0 | Exibir versão e commit publicados | integrado | páginas principal e Sobre consomem `data/build-meta.json` |
+| P0 | Impedir versionamento de artefatos derivados | concluído | `.gitignore` cobre JSON, metadados de build e cache Python |
+| P0 | Validar alterações em pull request | concluído | PR #3; run 29699990478 concluído com sucesso |
+| P0 | Confirmar deploy posterior ao merge | bloqueado | requer evidência do run de push da `main` ou inspeção direta do site publicado |
+| P0 | Alinhar registro executivo no Drive | documentado | aba `project_changelog` criada na planilha histórica do projeto |
 | P1 | Restaurar classificação controlada do tipo de fonte | planejado | `resource_type` documentado, validado e aplicado às 51 fontes |
 | P1 | Separar escala geográfica de descrição territorial | planejado | filtro usa categoria controlada e preserva descrição livre |
 | P1 | Normalizar formatos, protocolos e citações | planejado | campos não misturam formatos, visualizações e notas livres |
@@ -34,17 +37,12 @@ GitHub Issues está desativado neste repositório. O backlog abaixo é, portanto
 | P2 | Arquivar no Zenodo e obter DOI | planejado | DOI registrado no site, `CITATION.cff` e Drive |
 | P2 | Instituir manutenção periódica | planejado | verificações trimestrais e anuais documentadas |
 
-## Ciclo atual
+## Ciclo P0 — resultado
 
-**Branch:** `agent/p0-operational-closure`
+- **PR:** #3 — `Fechar rastreabilidade operacional da versão 0.7.0`
+- **Commit integrado:** `a25b3d8b220d4725d14a04dffb84456dcb8dc89a`
+- **Validação do PR:** GitHub Actions run `29699990478`, sucesso
+- **Drive:** aba `project_changelog` criada em `World_Ecology_Databases_Systems_v0.5`
+- **Situação final:** implementação, validação, integração e documentação confirmadas; publicação pós-merge ainda não observável neste ambiente
 
-**Escopo:** fechamento operacional da versão 0.7.0, sem alterar o conteúdo científico das 51 fontes.
-
-**Mudanças previstas:**
-
-- gerar `data/build-meta.json` no build;
-- exibir versão, commit e dimensões no site;
-- ignorar artefatos derivados;
-- validar a branch em pull request;
-- integrar e confirmar o deploy;
-- registrar o resultado no Google Drive.
+O P1 não deve ser iniciado como concluído ou publicado enquanto o deploy da `main` permanecer sem evidência verificável.
