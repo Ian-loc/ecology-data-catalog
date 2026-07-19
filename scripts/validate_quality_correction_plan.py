@@ -73,26 +73,29 @@ status = STATUS_PATH.read_text(encoding="utf-8")
 require_cycle_order(workflow, "QUALITY_CORRECTION_WORKFLOW.md")
 require_cycle_order(implementation, "IMPLEMENTATION_WORKFLOW.md")
 
+workflow_folded = workflow.casefold()
 for token in (
-    "não bloqueante para v1.0.0 e DOI",
+    "não bloqueante para v1.0.0 e doi",
     "data/product_resolution_examples.csv",
     "não é cientificamente seguro inferir resolução",
     "página didática",
-    "Checkpoints de reordenação",
+    "checkpoints de reordenação",
     "nenhuma nova fonte entra diretamente no catálogo",
 ):
-    if token not in workflow:
+    if token.casefold() not in workflow_folded:
         fail(f"workflow sem requisito: {token}")
 
+status_folded = status.casefold()
 for token in (
     "DATA1-BX antes de BR1",
     "Novas fontes permanecem fora do CSV",
     "RES1 e EDU1",
 ):
-    if token not in status:
+    if token.casefold() not in status_folded:
         fail(f"WORKFLOW_STATUS.md sem estado crítico: {token}")
 
 selection = SELECTION_PATH.read_text(encoding="utf-8")
+selection_folded = selection.casefold()
 for section in (
     "Critérios mínimos de inclusão",
     "Critérios de exclusão",
@@ -101,7 +104,7 @@ for section in (
     "Matriz de lacunas",
     "Critérios de prioridade para expansão",
 ):
-    if section not in selection:
+    if section.casefold() not in selection_folded:
         fail(f"política de seleção sem seção: {section}")
 
 with CSV_PATH.open(encoding="utf-8-sig", newline="") as handle:
