@@ -43,14 +43,19 @@ def fail(message: str) -> None:
     raise SystemExit(f"ERRO: {message}")
 
 
+def cycle_pattern(cycle: str) -> str:
+    if cycle == "DATA1-BR":
+        return r"\|\s*DATA1-BR(?:/BR1)?\s*\|"
+    return rf"\|\s*{re.escape(cycle)}\s*\|"
+
+
 def require_cycle_order(text: str, filename: str) -> None:
     positions: list[int] = []
     for cycle in REQUIRED_CYCLES:
-        marker = f"| {cycle} |"
-        position = text.find(marker)
-        if position < 0:
+        match = re.search(cycle_pattern(cycle), text)
+        if not match:
             fail(f"{filename} não contém ciclo obrigatório: {cycle}")
-        positions.append(position)
+        positions.append(match.start())
     if positions != sorted(positions):
         fail(f"ordem operacional dos ciclos está divergente em {filename}")
 
@@ -88,9 +93,9 @@ for token in (
 
 status_folded = status.casefold()
 for token in (
-    "bloqueado por DATA1-BX",
-    "Novas fontes permanecem fora do CSV",
-    "RES1 e EDU1",
+    "revisão externa bloqueada",
+    "novas fontes permanecem fora do csv",
+    "res1 e edu1",
 ):
     if token.casefold() not in status_folded:
         fail(f"WORKFLOW_STATUS.md sem estado crítico: {token}")
@@ -127,5 +132,6 @@ if readiness.get("doi_allowed") is not False:
 print(
     "OK: correções de qualidade validadas — 14 regras alinhadas; "
     "seleção documentada; SELECT1 e DATA1-BX precedem BR1; "
-    "RES1 e EDU1 não bloqueantes; CSV 51 × 34 e versão 0.7.0 preservados"
+    "BR1 externo bloqueado; RES1 e EDU1 não bloqueantes; "
+    "CSV 51 × 34 e versão 0.7.0 preservados"
 )
