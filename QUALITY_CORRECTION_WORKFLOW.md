@@ -18,11 +18,11 @@ O princípio central é simples: **controle de processo não substitui verifica�
 
 ## Ordem operacional revisada
 
-| Ordem | Ciclo | Prioridade | Escopo | Estado inicial | Critério de conclusão |
+| Ordem | Ciclo | Prioridade | Escopo | Estado atual | Critério de conclusão |
 |---:|---|---|---|---|---|
-| 1 | QC0 | P0 | Alinhar as 14 regras semânticas entre auditoria, JSON e CI | em desenvolvimento | contrato e teste exigem o mesmo conjunto exato de regras |
-| 2 | SELECT1 | P0 | Definir inclusão, exclusão, duplicidade e análise de lacunas | em desenvolvimento | política versionada e validada pelo CI |
-| 3 | DATA1-BX | P0 | Expandir a matriz para todos os campos cuja normalização foi prometida | planejado | 51 linhas com propostas ou estados explícitos para todos os campos-alvo |
+| 1 | QC0 | P0 | Alinhar as 14 regras semânticas entre auditoria, JSON e CI | integrado e validado | contrato e teste exigem o mesmo conjunto exato de regras |
+| 2 | SELECT1 | P0 | Definir inclusão, exclusão, duplicidade e análise de lacunas | integrado e validado | política versionada e validada pelo CI |
+| 3 | DATA1-BX | P0 | Expandir a matriz para todos os campos cuja normalização foi prometida | em desenvolvimento | 51 linhas com propostas ou estados explícitos para todos os campos-alvo |
 | 4 | DATA1-BR | P0 | Revisar os 35 casos pendentes contra documentação oficial | bloqueado por DATA1-BX | nenhuma decisão pendente ou inferida sem evidência |
 | 5 | DATA1-C | P0 | Migrar atomicamente para 38 campos | bloqueado | 51 IDs preservados, zero perda e versão 0.8.0 validada |
 | 6 | DATA1-D | P0 | Ativar validações semânticas no CSV final | planejado | as 14 regras bloqueiam estados inconsistentes |
@@ -33,18 +33,22 @@ O princípio central é simples: **controle de processo não substitui verifica�
 | 11 | RES1 | P3 | Faixas de resolução por produto | baixa prioridade; não bloqueante | tabela auxiliar documentada e auditada |
 | 12 | EDU1 | P3 | Página didática sobre fenômenos ambientais | baixa prioridade; não bloqueante | conteúdo curto, referenciado e ligado às fontes do catálogo |
 
+### Checkpoint após QC0 + SELECT1
+
+QC0 e SELECT1 foram concluídos no PR #19 e validados pelo run 29706338430. A reordenação foi confirmada: DATA1-BX é a próxima etapa autoritativa e BR1 permanece bloqueado até a matriz cobrir as cinco dimensões faltantes.
+
 ## QC0 — contrato semântico
 
-Correções imediatas:
+Correções concluídas:
 
-- exigir exatamente 14 regras no contrato 0.8.0;
-- adicionar ao JSON as regras sobre `visualization_types`, unicidade/trim de listas e DOI de evidência;
-- impedir que o validador aceite apenas “dez ou mais” regras;
-- manter CSV, CFF, versão e interface inalterados.
+- exigência de exatamente 14 regras no contrato 0.8.0;
+- inclusão no JSON das regras sobre `visualization_types`, unicidade/trim de listas e DOI de evidência;
+- substituição do teste permissivo de “dez ou mais” pelo conjunto exato;
+- CSV, CFF, versão e interface mantidos inalterados.
 
 ## SELECT1 — critérios de seleção e cobertura
 
-A política de seleção deve responder:
+A política de seleção passou a responder:
 
 - o que conta como fonte elegível;
 - o que deve ser excluído;
@@ -53,7 +57,7 @@ A política de seleção deve responder:
 - como registrar candidatos sem colocá-los imediatamente no CSV;
 - como medir lacunas temáticas, geográficas, institucionais e de acesso.
 
-A expansão permanecerá bloqueada até essa política estar ativa.
+A expansão permanece bloqueada até DATA1 e DATA2 estarem concluídos, mas a política já está ativa e versionada.
 
 ## DATA1-BX — completar a matriz antes da revisão externa
 
@@ -67,13 +71,24 @@ A matriz DATA1-B cobre tipo, escala, formatos, protocolos, ferramentas, situaç�
 
 Antes de BR1, a matriz deverá ser ampliada com estes campos e com estados explícitos de confiança e revisão. Não é permitido declarar a normalização completa enquanto essas dimensões não estiverem cobertas.
 
+A auditoria deste ciclo identificou que uma única coluna `confidence` por linha é insuficiente para DATA1-BX: um registro pode ter alta confiança em tipos de produto e baixa confiança em condições de acesso. O contrato DATA1-BX, portanto, exige confiança por dimensão.
+
+### Estrutura de controle
+
+- `migration/data1bx_contract.json`: contrato legível por máquina;
+- `migration/data1bx_migration_matrix.csv`: 51 IDs preservados e cinco pares proposta/confiança;
+- `scripts/validate_data1bx_matrix.py`: valida estados, evidência e bloqueio de migração.
+
+O estado inicial `não_iniciado` é deliberado. Copiar um valor do CSV canônico muda o estado para `carregado_do_csv`, mas não constitui verificação externa e mantém as cinco dimensões pendentes.
+
 ### Regra de migração
 
 - valor controlado confirmado → proposta explícita;
 - heterogeneidade real entre produtos → placeholder documentado e justificativa;
 - ausência de evidência → `unknown`, revisão pendente;
 - texto científico que não cabe em vocabulário → preservado em campo narrativo, sem perda;
-- nenhuma transformação automática apenas por correspondência de palavras.
+- nenhuma transformação automática apenas por correspondência de palavras;
+- nenhuma linha DATA1-BX autoriza migração enquanto houver dimensão pendente.
 
 ## DATA1-BR e DATA2 — revisão científica
 
@@ -160,7 +175,7 @@ EDU1 é **não bloqueante para v1.0.0 e DOI** e deve ser iniciado somente após 
 
 A ordem será reavaliada após:
 
-1. QC0 + SELECT1;
+1. QC0 + SELECT1 — concluído;
 2. DATA1-BX;
 3. cada lote BR1–BR5;
 4. migração 0.8.0;
