@@ -64,7 +64,7 @@ Quando um recurso substitui outro:
 
 ## Candidatos
 
-Novas fontes devem entrar primeiro em uma fila de candidatos separada do CSV canônico. A triagem mínima deve registrar:
+Novas fontes devem entrar primeiro em `candidates/source_candidates.csv`, separado do CSV canônico. A triagem mínima deve registrar:
 
 - nome e URL;
 - motivo da candidatura;
@@ -75,6 +75,8 @@ Novas fontes devem entrar primeiro em uma fila de candidatos separada do CSV can
 - decisão: incluir, excluir, fundir, aguardar evidência.
 
 Nenhum candidato deve ser publicado diretamente sem passar por revisão de elegibilidade e completude.
+
+A fila usa estados explícitos de evidência e revisão. Uma URL fornecida pelo usuário pode justificar `triagem_inicial`, mas não autoriza `incluir`, `excluir` ou `fundir` sem documentação oficial revisada. O contrato da fila está documentado em `candidates/README.md` e é validado por `scripts/validate_candidate_queue.py`.
 
 ## Matriz de lacunas
 
