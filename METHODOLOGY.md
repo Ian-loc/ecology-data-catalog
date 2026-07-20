@@ -31,8 +31,8 @@ Pacote cliente não é, por si só, API do provedor. Serviço OGC não é REST A
 
 ### Papéis dos links
 
-- `homepage_url`: página institucional ou página Sobre;
-- `data_access_url`: catálogo, busca, visualizador, solicitação ou download;
+- `homepage_url` — **Site oficial**: página institucional ou página Sobre;
+- `data_access_url` — **Acessar dados**: catálogo, busca, visualizador, solicitação ou download;
 - `access_documentation_url`: API, protocolo, autenticação ou instruções técnicas.
 
 URLs iguais entram em revisão. A igualdade só pode permanecer como exceção documentada quando uma única página cumpre realmente os dois papéis. `data_access_url = não se aplica` é reservado a recursos sem dados próprios.
