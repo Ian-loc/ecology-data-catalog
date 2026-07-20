@@ -58,11 +58,16 @@ def read_csv(path: Path) -> tuple[list[str], list[dict[str, str]]]:
         return list(reader.fieldnames or []), list(reader)
 
 
-def https_hostname(value: str) -> str:
+def hostname(value: str) -> str:
+    parsed = urlparse(value)
+    return parsed.netloc.casefold().removeprefix("www.")
+
+
+def candidate_https_hostname(value: str) -> str:
     parsed = urlparse(value)
     if parsed.scheme != "https" or not parsed.netloc:
-        fail(f"URL deve ser HTTPS: {value}")
-    return parsed.netloc.casefold().removeprefix("www.")
+        fail(f"URL candidata deve ser HTTPS: {value}")
+    return hostname(value)
 
 
 def iso_date(value: str) -> bool:
@@ -95,9 +100,9 @@ if any(not ID_PATTERN.fullmatch(value) for value in candidate_ids):
     fail("candidate_id fora do padrão CAND0001")
 
 canonical_hosts = {
-    https_hostname(row["homepage_url"].strip())
+    hostname(row["homepage_url"].strip())
     for row in canonical_rows
-    if row.get("homepage_url", "").strip()
+    if row.get("homepage_url", "").strip() and hostname(row["homepage_url"].strip())
 }
 candidate_hosts: set[str] = set()
 
@@ -120,7 +125,7 @@ for line, row in enumerate(candidates, start=2):
         if not row[field].strip():
             fail(f"linha {line} ({cid}): campo obrigatório vazio: {field}")
 
-    host = https_hostname(row["homepage_url"].strip())
+    host = candidate_https_hostname(row["homepage_url"].strip())
     if host in candidate_hosts:
         fail(f"linha {line} ({cid}): domínio duplicado na fila")
     if host in canonical_hosts:
