@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 concurrency:
@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Validar workflow de correções de qualidade
         run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar fila de candidatos
@@ -26,16 +24,6 @@ jobs:
         run: python3 scripts/build_catalog.py
       - name: Auditar papéis dos links
         run: python3 scripts/audit_link_roles.py
-      - name: Materializar relatório de links no branch
-        if: github.event_name == 'pull_request'
-        run: |
-          if ! git diff --quiet -- data/link_role_audit.json; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/link_role_audit.json
-            git commit -m "chore: atualizar relatório de papéis dos links"
-            git push origin HEAD:${{ github.head_ref }}
-          fi
       - name: Validar proposta de esquema
         run: python3 scripts/validate_schema_draft.py
       - name: Validar matriz de migração DATA1-B
