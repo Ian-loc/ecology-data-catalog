@@ -2,10 +2,11 @@
 
 ## Finalidade
 
-A migração do esquema 0.7.0 para 0.8.0 é preparada em duas matrizes separadas:
+A migração do esquema 0.7.0 para 0.8.0 é preparada em matrizes separadas:
 
 - `data1b_migration_matrix.csv`: decisões iniciais sobre os quatro novos campos e normalizações técnicas já projetadas;
-- `data1bx_migration_matrix.csv`: complemento obrigatório para cinco dimensões que ainda não estavam cobertas.
+- `data1bx_migration_matrix.csv`: complemento obrigatório para cinco dimensões que ainda não estavam cobertas;
+- `br1_review_matrix.csv`: primeiro lote de revisão aprofundada dos registros que permanecem dependentes de evidência externa.
 
 Nenhuma matriz substitui o arquivo canônico `data/data_resources.csv`. Os valores permanecem associados pelo `resource_id`, e a versão 0.7.0 continua protegida até DATA1-C.
 
@@ -79,6 +80,30 @@ O contrato está em `data1bx_contract.json`. A matriz `data1bx_migration_matrix.
 
 Uma confiança global por linha não é suficiente no DATA1-BX. A confiança deve ser registrada separadamente para cada dimensão.
 
+## DATA1-BR — lote BR1
+
+O contrato `br1_contract.json` seleciona sete fontes atuais que combinam uso científico elevado, impacto público e alto custo de interpretação incorreta:
+
+1. CEMADEN (`DR0005`);
+2. dados.gov.br (`DR0008`);
+3. MapBiomas (`DR0010`);
+4. TerraBrasilis (`DR0011`);
+5. BDQueimadas (`DR0012`);
+6. Google Earth Engine (`DR0019`);
+7. Global Forest Watch (`DR0044`).
+
+A matriz `br1_review_matrix.csv` registra:
+
+- justificativa da seleção e nível de risco;
+- riscos de agregação, escopo por produto, acesso, licença, temporalidade e semântica;
+- achados de consistência interna;
+- URLs já presentes no CSV;
+- dimensões que precisam de confronto com documentação oficial;
+- bloqueio explícito da revisão externa quando não há acesso web atual;
+- decisão conservadora de manter o CSV até existir evidência contemporânea.
+
+A auditoria interna não equivale a validação factual externa. Enquanto `external_review_status` for `bloqueada_sem_web`, a matriz não aceita URL de evidência usada, revisor, data ou decisão de correção.
+
 ## Validação
 
 Execute:
@@ -86,14 +111,18 @@ Execute:
 ```bash
 python3 scripts/validate_migration_matrix.py
 python3 scripts/validate_data1bx_matrix.py
+python3 scripts/load_data1bx_from_canonical.py
+python3 scripts/validate_br1_matrix.py
 ```
 
-O primeiro teste valida a matriz DATA1-B. O segundo valida o contrato DATA1-BX, a preservação dos 51 IDs, a confiança por campo, os estados de evidência e o bloqueio de migração automática.
+Os testes preservam os 51 IDs, a correspondência das matrizes com o CSV 0.7.0, a confiança por campo, os estados de evidência e o bloqueio de alterações automáticas.
 
 ## Estado protegido
 
 - CSV canônico: 51 fontes × 34 campos;
 - versão formal: 0.7.0;
 - esquema 0.8.0: proposta não aplicada;
-- DATA1-BR: bloqueado até DATA1-BX estar completo;
+- DATA1-BX: projeção canônica concluída, confiança externa ainda desconhecida;
+- BR1: seleção e auditoria interna concluídas; revisão factual externa bloqueada;
+- candidatos: fora do CSV;
 - DOI: bloqueado.
