@@ -39,6 +39,18 @@ A estrutura foi inspirada, sem correspondência normativa, na [Tabela de Áreas 
 
 Serviços OGC não são rotulados como REST API. Download manual não é acesso programático. Ausência de documentação resulta em `desconhecido`, não em `não`.
 
+### Papéis dos links
+
+Os links apresentados nos cards devem cumprir papéis diferentes:
+
+- `homepage_url` — **Site oficial**: página institucional principal da fonte, página “Sobre” ou página oficial do órgão responsável dedicada ao recurso;
+- `data_access_url` — **Acessar dados**: catálogo, busca, visualizador, formulário de solicitação ou página de download onde os dados podem ser consultados ou obtidos;
+- `access_documentation_url` — documentação técnica de API, protocolo, credenciais ou processo de acesso.
+
+A homepage institucional não deve ser reutilizada como página de acesso apenas porque contém um caminho indireto para os dados. Quando `homepage_url` e `data_access_url` apontam para o mesmo destino, o registro entra em revisão. A igualdade só pode ser mantida como exceção documentada quando uma única página realmente apresenta a fonte e oferece acesso efetivo aos dados.
+
+`data_access_url = não se aplica` é reservado a recursos sem dados próprios para consulta ou download, como software de publicação ou guias que encaminham a provedores externos.
+
 ## Cobertura do Brasil
 
 `covers_brazil` responde se a fonte possui dados aplicáveis ao território brasileiro:

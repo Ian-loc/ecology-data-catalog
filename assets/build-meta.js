@@ -14,7 +14,8 @@ async function renderBuildMeta(){
       "q-official-docs":quality.official_documentation_records,
       "q-peer-reviewed":quality.peer_reviewed_evidence_records,
       "q-access-uncertain":quality.access_uncertainty_records,
-      "q-license-uncertain":quality.license_uncertainty_records
+      "q-license-uncertain":quality.license_uncertainty_records,
+      "q-link-role-pending":quality.link_role_pending_records
     };
     Object.entries(values).forEach(([id,value])=>{
       const target=document.getElementById(id);
@@ -22,7 +23,7 @@ async function renderBuildMeta(){
     });
   }catch(error){
     targets.forEach(target=>target.textContent="versão não identificada");
-    ["q-official-docs","q-peer-reviewed","q-access-uncertain","q-license-uncertain"].forEach(id=>{
+    ["q-official-docs","q-peer-reviewed","q-access-uncertain","q-license-uncertain","q-link-role-pending"].forEach(id=>{
       const target=document.getElementById(id);
       if(target)target.textContent="—";
     });
