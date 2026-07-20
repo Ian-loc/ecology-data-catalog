@@ -51,8 +51,7 @@ def fail(message: str) -> None:
 def require_cycle_order(text: str, filename: str) -> None:
     positions: list[int] = []
     for cycle in REQUIRED_CYCLES:
-        pattern = rf"\|\s*{re.escape(cycle)}\s*\|"
-        match = re.search(pattern, text)
+        match = re.search(rf"\|\s*{re.escape(cycle)}\s*\|", text)
         if not match:
             fail(f"{filename} não contém ciclo obrigatório: {cycle}")
         positions.append(match.start())
@@ -100,7 +99,8 @@ status_folded = status.casefold()
 for token in (
     "revisão externa bloqueada",
     "novas fontes permanecem fora do csv",
-    "implementado_pendente_integracao",
+    "| data1-br-close | concluído |",
+    "| data1-ext | ativo |",
     "res1 e edu1",
 ):
     if token.casefold() not in status_folded:
@@ -110,7 +110,7 @@ selection = SELECTION_PATH.read_text(encoding="utf-8").casefold()
 for section in (
     "critérios mínimos de inclusão", "critérios de exclusão",
     "duplicidade e relação entre recursos", "candidatos", "matriz de lacunas",
-    "critérios de prioridade para expansão",
+    "critérios de prioridade para expansão", "recursos bibliométricos e editoriais",
 ):
     if section not in selection:
         fail(f"política de seleção sem seção: {section}")
@@ -132,6 +132,6 @@ if readiness.get("doi_allowed") is not False:
     fail("DOI deve permanecer bloqueado")
 
 print(
-    "OK: documentação e workflow coerentes — ordem até DATA1-EXT, plano antigo removido, "
-    "14 regras alinhadas, CSV 51 × 34 e versão 0.7.0 preservados"
+    "OK: DATA1-BR-CLOSE concluído e DATA1-EXT ativo; documentação coerente, "
+    "plano antigo removido, 14 regras alinhadas, CSV 51 × 34 e versão 0.7.0 preservados"
 )
