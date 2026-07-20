@@ -7,8 +7,8 @@
 | `acronym` | Sigla ou nome curto. |
 | `official_identity` | Natureza declarada pela própria fonte. |
 | `description` | Síntese objetiva do propósito. |
-| `homepage_url` | Página institucional. |
-| `data_access_url` | Página efetiva de consulta ou download. |
+| `homepage_url` | Site institucional principal, página “Sobre” ou página oficial do órgão responsável dedicada à fonte. Não é, por padrão, o link direto para os dados. |
+| `data_access_url` | Destino efetivo para pesquisar, visualizar, solicitar ou baixar dados. Deve apontar ao catálogo, busca, visualizador, formulário de acesso ou página de download mais direta e estável. |
 | `research_areas` | Áreas condensadas usadas no filtro. |
 | `keywords` | Temas específicos pesquisáveis. |
 | `data_product_types` | Produtos disponibilizados. |
@@ -25,7 +25,7 @@
 | `programmatic_access` | Disponibilidade de acesso automatizado documentado. |
 | `access_protocols` | Protocolos, APIs, pacotes ou mecanismos. |
 | `authentication_required` | Necessidade de conta, token ou credencial. |
-| `access_documentation_url` | Documentação técnica do acesso. |
+| `access_documentation_url` | Documentação técnica do acesso; não substitui automaticamente a página efetiva de acesso aos dados. |
 | `license` | Licença dos dados ou condição declarada. |
 | `institutional_status` | Natureza institucional. |
 | `owner_or_manager` | Responsável pela fonte. |
@@ -36,6 +36,12 @@
 | `academic_evidence_note` | O que a evidência sustenta. |
 | `verification_url` | Principal evidência oficial. |
 | `last_verified` | Data efetiva da revisão, AAAA-MM-DD. |
+
+## Regra dos links
+
+Os botões **Site oficial** e **Acessar dados** devem cumprir funções diferentes. Quando `homepage_url` e `data_access_url` apontam para o mesmo destino, o registro permanece como pendência de revisão. A igualdade só pode ser mantida após confirmação de que uma única página realmente apresenta a fonte e oferece acesso efetivo aos dados.
+
+`data_access_url = não se aplica` é reservado a recursos que não oferecem dados diretamente, como software de publicação ou guias de descoberta que encaminham a outros provedores.
 
 ## Valores controlados
 
