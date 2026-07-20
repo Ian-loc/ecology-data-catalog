@@ -72,6 +72,7 @@ implementation = IMPLEMENTATION_PATH.read_text(encoding="utf-8")
 status = STATUS_PATH.read_text(encoding="utf-8")
 require_cycle_order(workflow, "QUALITY_CORRECTION_WORKFLOW.md")
 require_cycle_order(implementation, "IMPLEMENTATION_WORKFLOW.md")
+require_cycle_order(status, "WORKFLOW_STATUS.md")
 
 workflow_folded = workflow.casefold()
 for token in (
@@ -87,7 +88,7 @@ for token in (
 
 status_folded = status.casefold()
 for token in (
-    "DATA1-BX antes de BR1",
+    "bloqueado por DATA1-BX",
     "Novas fontes permanecem fora do CSV",
     "RES1 e EDU1",
 ):
