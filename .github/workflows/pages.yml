@@ -5,7 +5,7 @@ on:
   pull_request:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 concurrency:
@@ -16,6 +16,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Materializar DATA1-BX no branch de trabalho
+        if: github.event_name == 'pull_request' && github.head_ref == 'agent/health-candidates-data1bx-quality-ui'
+        run: |
+          python3 scripts/load_data1bx_from_canonical.py --write
+          if git diff --quiet -- migration/data1bx_migration_matrix.csv; then
+            echo "Matriz já materializada"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add migration/data1bx_migration_matrix.csv
+            git commit -m "chore: materializar matriz DATA1-BX"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
       - name: Validar workflow de correções de qualidade
         run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar fila de candidatos
