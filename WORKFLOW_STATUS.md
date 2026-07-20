@@ -46,7 +46,7 @@ Uma tarefa só é concluída após branch, pull request, integração à `main`,
 
 ## Fechamento DATA1-BR-CLOSE
 
-O conteúdo foi integrado diretamente à `main` no commit `df66ab15a064e2b1b70a6e9387a1abcc20b7358a`. A integração concorrente foi documentada e submetida à suíte completa no PR #29, run `29778282362`, merge `e02b409c10bde4afc890ae53793095550d3e4e61`.
+Enquanto esta sessão ainda preparava o pull request, outra sessão abriu e integrou o PR #28, gerando o merge commit `df66ab15a064e2b1b70a6e9387a1abcc20b7358a`. O estado foi novamente validado pelo PR #29, run `29778282362`, e o fechamento documental foi integrado pelo PR #30 no commit `ced7bc7274b740fdc0eed4963d36f0fc33b05d9f`.
 
 `scientific_priority_tier` usa somente impacto e risco comparáveis. `execution_wave` organiza escopo, papéis dos links e documentação ausente. Número bruto de flags ou dimensões não entra na prioridade.
 
