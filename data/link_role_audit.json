@@ -1,0 +1,11 @@
+{
+  "records": 0,
+  "standard": {},
+  "counts": {
+    "separate_destinations": 0,
+    "same_destination_pending_review": 0,
+    "data_access_not_applicable": 0
+  },
+  "records_requiring_review": [],
+  "interpretation": "Relatório inicial; será atualizado deterministicamente pela auditoria do workflow."
+}
