@@ -1,12 +1,19 @@
-# Matriz de migração DATA1-B
+# Matrizes de migração DATA1
 
 ## Finalidade
 
-`data1b_migration_matrix.csv` registra uma decisão proposta para cada uma das 51 fontes antes da migração do esquema 0.7.0 para 0.8.0.
+A migração do esquema 0.7.0 para 0.8.0 é preparada em duas matrizes separadas:
 
-A matriz não duplica os campos existentes. Os valores atuais permanecem no arquivo canônico `data/data_resources.csv` e são associados pelo `resource_id` durante a validação.
+- `data1b_migration_matrix.csv`: decisões iniciais sobre os quatro novos campos e normalizações técnicas já projetadas;
+- `data1bx_migration_matrix.csv`: complemento obrigatório para cinco dimensões que ainda não estavam cobertas.
 
-## Ligações com o CSV atual
+Nenhuma matriz substitui o arquivo canônico `data/data_resources.csv`. Os valores permanecem associados pelo `resource_id`, e a versão 0.7.0 continua protegida até DATA1-C.
+
+## DATA1-B — matriz inicial
+
+`data1b_migration_matrix.csv` registra uma decisão proposta para cada uma das 51 fontes.
+
+### Ligações com o CSV atual
 
 | Decisão | Campo atual usado como base |
 |---|---|
@@ -17,7 +24,7 @@ A matriz não duplica os campos existentes. Os valores atuais permanecem no arqu
 | situação institucional | `institutional_status` |
 | evidência | `verification_url` |
 
-## Colunas da matriz
+### Colunas
 
 - `resource_id`: identificador preservado do catálogo;
 - `resource_type_proposed`: função principal controlada;
@@ -27,23 +34,50 @@ A matriz não duplica os campos existentes. Os valores atuais permanecem no arqu
 - `access_tools_proposed`: pacotes, clientes e ambientes separados dos protocolos;
 - `institutional_status_proposed`: situação institucional normalizada e multivalorada;
 - `citation_guidance_url_proposed`: página oficial específica de citação, somente quando confirmada;
-- `confidence`: `alta`, `média` ou `baixa`;
+- `confidence`: confiança global da decisão DATA1-B;
 - `migration_status`: decisão pronta ou dependente de revisão manual;
 - `rationale`: justificativa funcional e geográfica;
 - `exceptions`: exceções codificadas que impedem migração automática.
 
-## Estado atual
+### Estado
 
 - 51 fontes representadas;
 - 24 decisões de alta confiança;
 - 27 decisões de confiança média;
 - nenhuma decisão de baixa confiança;
-- 16 registros sem exceção estão prontos para a futura migração;
-- 35 registros permanecem em revisão manual por confiança média ou exceção técnica;
-- todo valor `other_documented` exige exceção explícita e revisão manual, mesmo quando a classificação geral tem alta confiança;
-- URLs de orientação de citação permanecem vazias até confirmação oficial específica;
-- CSV canônico ainda permanece em 0.7.0, com 34 campos;
-- nenhuma proposta deve ser aplicada antes da revisão dos registros marcados como `revisão_manual`.
+- 16 registros sem exceção estão prontos nesta matriz;
+- 35 registros permanecem em revisão manual;
+- todo valor `other_documented` exige exceção explícita;
+- URLs de orientação de citação permanecem vazias até confirmação oficial;
+- nenhuma proposta deve ser aplicada antes das revisões previstas.
+
+## DATA1-BX — complemento obrigatório
+
+A auditoria identificou cinco dimensões ausentes da matriz inicial:
+
+- `data_product_types`;
+- `visualization_types`;
+- `data_sources`;
+- `temporal_resolution`;
+- `access_conditions`.
+
+O contrato está em `data1bx_contract.json`. A matriz `data1bx_migration_matrix.csv` preserva os mesmos 51 IDs e registra, para cada dimensão:
+
+- valor proposto;
+- confiança específica do campo;
+- estado de revisão;
+- base de evidência;
+- URL, data e revisor quando houver confirmação oficial;
+- campos ainda pendentes.
+
+### Estados
+
+- `não_iniciado`: nenhum valor carregado; todas as cinco dimensões pendentes;
+- `carregado_do_csv`: valor copiado do CSV 0.7.0, com confiança `desconhecida`; não equivale a verificação externa;
+- `revisão_manual`: uma ou mais dimensões em avaliação;
+- `confirmado_documentação_oficial`: cinco dimensões sustentadas por evidência oficial, data e revisor.
+
+Uma confiança global por linha não é suficiente no DATA1-BX. A confiança deve ser registrada separadamente para cada dimensão.
 
 ## Validação
 
@@ -51,6 +85,15 @@ Execute:
 
 ```bash
 python3 scripts/validate_migration_matrix.py
+python3 scripts/validate_data1bx_matrix.py
 ```
 
-O teste confere cardinalidade, IDs, vocabulários, coerência com o CSV atual, exceções, confiança, status de migração e regras cruzadas do contrato `schema/v0.8.0-draft.json`.
+O primeiro teste valida a matriz DATA1-B. O segundo valida o contrato DATA1-BX, a preservação dos 51 IDs, a confiança por campo, os estados de evidência e o bloqueio de migração automática.
+
+## Estado protegido
+
+- CSV canônico: 51 fontes × 34 campos;
+- versão formal: 0.7.0;
+- esquema 0.8.0: proposta não aplicada;
+- DATA1-BR: bloqueado até DATA1-BX estar completo;
+- DOI: bloqueado.
