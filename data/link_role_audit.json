@@ -1,11 +1,129 @@
 {
-  "records": 0,
-  "standard": {},
-  "counts": {
-    "separate_destinations": 0,
-    "same_destination_pending_review": 0,
-    "data_access_not_applicable": 0
+  "records": 51,
+  "standard": {
+    "homepage_url": "Página institucional principal ou página oficial sobre a fonte.",
+    "data_access_url": "Página onde os dados podem ser pesquisados, visualizados, solicitados ou baixados.",
+    "same_destination": "Pendência de revisão; somente pode ser mantida como exceção documentada após inspeção oficial.",
+    "not_applicable": "Usado quando o recurso não oferece dados para consulta ou download, como software de publicação."
   },
-  "records_requiring_review": [],
-  "interpretation": "Relatório inicial; será atualizado deterministicamente pela auditoria do workflow."
+  "counts": {
+    "separate_destinations": 34,
+    "same_destination_pending_review": 16,
+    "data_access_not_applicable": 1
+  },
+  "records_requiring_review": [
+    {
+      "resource_id": "DR0004",
+      "resource_name": "Sistema de Registro Nacional de Emissões",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/sirene",
+      "data_access_url": "https://www.gov.br/mcti/pt-br/acompanhe-o-mcti/sirene"
+    },
+    {
+      "resource_id": "DR0007",
+      "resource_name": "UrbVerde",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://urbverde.iau.usp.br/",
+      "data_access_url": "https://urbverde.iau.usp.br/"
+    },
+    {
+      "resource_id": "DR0011",
+      "resource_name": "TerraBrasilis",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://terrabrasilis.dpi.inpe.br/",
+      "data_access_url": "https://terrabrasilis.dpi.inpe.br/"
+    },
+    {
+      "resource_id": "DR0014",
+      "resource_name": "Sistema de Informação sobre a Biodiversidade Brasileira",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://www.sibbr.gov.br/",
+      "data_access_url": "https://www.sibbr.gov.br/"
+    },
+    {
+      "resource_id": "DR0015",
+      "resource_name": "Banco de Dados e Informações Ambientais",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://bdiaweb.ibge.gov.br/",
+      "data_access_url": "https://bdiaweb.ibge.gov.br/"
+    },
+    {
+      "resource_id": "DR0017",
+      "resource_name": "Sistema Nacional de Informações sobre Recursos Hídricos / HidroWeb",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://www.snirh.gov.br/hidroweb/",
+      "data_access_url": "https://www.snirh.gov.br/hidroweb/"
+    },
+    {
+      "resource_id": "DR0018",
+      "resource_name": "Banco de Dados Meteorológicos do INMET",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://bdmep.inmet.gov.br/",
+      "data_access_url": "https://bdmep.inmet.gov.br/"
+    },
+    {
+      "resource_id": "DR0019",
+      "resource_name": "Google Earth Engine Data Catalog",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://developers.google.com/earth-engine/datasets",
+      "data_access_url": "https://developers.google.com/earth-engine/datasets"
+    },
+    {
+      "resource_id": "DR0020",
+      "resource_name": "Application for Extracting and Exploring Analysis Ready Samples",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://appeears.earthdatacloud.nasa.gov/",
+      "data_access_url": "https://appeears.earthdatacloud.nasa.gov/"
+    },
+    {
+      "resource_id": "DR0031",
+      "resource_name": "Knowledge Network for Biocomplexity",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://knb.ecoinformatics.org/",
+      "data_access_url": "https://knb.ecoinformatics.org/"
+    },
+    {
+      "resource_id": "DR0032",
+      "resource_name": "PANGAEA Data Publisher for Earth & Environmental Science",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://www.pangaea.de/",
+      "data_access_url": "https://www.pangaea.de/"
+    },
+    {
+      "resource_id": "DR0035",
+      "resource_name": "Climate Data Guide",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://climatedataguide.ucar.edu/",
+      "data_access_url": "https://climatedataguide.ucar.edu/"
+    },
+    {
+      "resource_id": "DR0036",
+      "resource_name": "Fine-Root Ecology Database",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://roots.ornl.gov/",
+      "data_access_url": "https://roots.ornl.gov/"
+    },
+    {
+      "resource_id": "DR0038",
+      "resource_name": "World Soil Information Service",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://www.isric.org/explore/wosis",
+      "data_access_url": "https://www.isric.org/explore/wosis"
+    },
+    {
+      "resource_id": "DR0045",
+      "resource_name": "Global Carbon Atlas",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://globalcarbonatlas.org/",
+      "data_access_url": "https://globalcarbonatlas.org/"
+    },
+    {
+      "resource_id": "DR0051",
+      "resource_name": "Project COSMOS",
+      "status": "same_destination_pending_review",
+      "homepage_url": "https://interactive.carbonbrief.org/cosmos/index.html",
+      "data_access_url": "https://interactive.carbonbrief.org/cosmos/index.html"
+    }
+  ],
+  "interpretation": "A igualdade entre os dois links não prova erro, mas indica que os papéis institucional e de acesso ainda não foram demonstrados separadamente."
 }
