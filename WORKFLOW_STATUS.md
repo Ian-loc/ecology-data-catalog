@@ -31,13 +31,13 @@ CI verde comprova estrutura e coerência interna. A verificação factual de fon
 | OBJ | Objetivos finais e portões para DOI | concluído | PR #17; run 29704132742; Drive atualizado |
 | DATA1-A | Auditoria e projeto do esquema 0.8.0 | validado e documentado | PR #13; run 29702732587 |
 | DATA1-B | Matriz inicial de migração | validado e documentado | PR #15; run 29703654373 |
-| QC0 | Alinhar 14 regras semânticas | em desenvolvimento | auditoria, JSON e CI devem exigir o mesmo conjunto exato |
-| SELECT1 | Inclusão, exclusão, duplicidade e lacunas | em desenvolvimento | política integrada e validada |
-| DATA1-BX | Completar campos da matriz | planejado e prioritário | incluir produtos, visualizações, origens, temporalidade e condições de acesso |
+| QC0 | Alinhar 14 regras semânticas | validado e documentado | PR #19; run 29706338430 |
+| SELECT1 | Inclusão, exclusão, duplicidade e lacunas | validado e documentado | PR #19; política integrada e validada |
+| DATA1-BX | Completar campos da matriz | em desenvolvimento | contrato, matriz de 51 IDs e validação por campo; preenchimento ainda pendente |
 | DATA1-BR | Revisão dos 35 casos pendentes | bloqueado por DATA1-BX | cinco lotes de sete; evidência oficial obrigatória |
 | DATA1-C | Migração atômica para 38 campos | bloqueado | 51 registros prontos e matriz completa |
 | DATA1-D | Validação semântica do esquema final | planejado | 14 regras ativas contra o CSV 0.8.0 |
-| DATA2 | Revisar as 51 fontes no esquema final | planejado | evidência, links, acesso, formatos, licença e data revisados |
+| DATA2 | Revisar as 51 fontes no esquema final | planejado | links, acesso, formatos, licença e data revisados |
 | UX5 | Interface dos 38 campos e testes de navegador | planejado | campos exibidos e fluxos funcionais verificados |
 | RELEASE1 | Título, ORCID, licenças e CFF | validado e documentado | PR #5 |
 | RELEASE2 | Criar versão 1.0.0 | bloqueado | G1–G10 concluídos e deploy confirmado |
@@ -53,10 +53,11 @@ CI verde comprova estrutura e coerência interna. A verificação factual de fon
 - **Campos canônicos atuais:** 34;
 - **UX1–UX4:** integrados e validados;
 - **DATA1-A e DATA1-B:** integrados e validados;
+- **QC0 e SELECT1:** integrados e validados no PR #19;
 - **G1:** concluído;
 - **G2–G12:** parciais ou bloqueados;
-- **Matriz atual:** 16 registros prontos e 35 em revisão manual;
-- **Matriz completa:** ainda não existe; DATA1-BX pendente;
+- **Matriz DATA1-B:** 16 registros prontos e 35 em revisão manual;
+- **DATA1-BX:** contrato e estrutura de 51 linhas criados; cinco dimensões ainda não preenchidas;
 - **Esquema 0.8.0:** ainda não aplicado;
 - **Expansão:** bloqueada; candidatos podem ser registrados separadamente;
 - **Publicação atual:** ainda não confirmada por inspeção direta;
@@ -65,18 +66,21 @@ CI verde comprova estrutura e coerência interna. A verificação factual de fon
 
 ## Correção de rota atual
 
-A auditoria transversal identificou:
+A auditoria transversal encontrou quatro fragilidades. Duas foram corrigidas no PR #19:
 
-1. 14 regras documentadas, mas somente 11 no contrato JSON;
-2. matriz sem todos os campos cuja normalização foi prometida;
-3. ausência de política formal de seleção e lacunas;
-4. risco de confundir validação estrutural com verificação científica.
+1. as 14 regras semânticas foram alinhadas entre documentação, contrato e CI;
+2. a política de inclusão, exclusão, duplicidade, candidatos e lacunas foi formalizada.
+
+Persistem duas pendências materiais:
+
+1. a matriz DATA1-B não cobre `data_product_types`, `visualization_types`, `data_sources`, `temporal_resolution` e `access_conditions`;
+2. uma confiança global por linha não representa adequadamente a incerteza diferente entre campos.
 
 A resposta operacional é:
 
-- concluir QC0 e SELECT1;
-- executar DATA1-BX antes de BR1;
-- manter DATA1-BR bloqueado até a matriz cobrir todos os campos-alvo;
+- usar o contrato DATA1-BX com confiança por dimensão e estados explícitos de revisão;
+- carregar valores do CSV apenas como ponto de partida, sem tratá-los como verificação externa;
+- manter DATA1-BR bloqueado até as 51 linhas cobrirem as cinco dimensões;
 - não expandir o CSV antes de DATA2;
 - manter RES1 e EDU1 como enriquecimentos posteriores e não bloqueantes.
 
@@ -96,7 +100,7 @@ RES1 e EDU1 não condicionam v1.0.0 ou DOI, salvo quando revelarem erro factual 
 
 Reavaliar a ordem após:
 
-1. QC0 + SELECT1;
+1. QC0 + SELECT1 — concluído;
 2. DATA1-BX;
 3. cada lote BR1–BR5;
 4. migração 0.8.0;
@@ -105,10 +109,10 @@ Reavaliar a ordem após:
 
 ## Próxima execução
 
-1. validar e integrar QC0 + SELECT1;
-2. ampliar a matriz em DATA1-BX;
-3. revisar a nova matriz e seu validador;
+1. carregar na matriz DATA1-BX os cinco valores atuais de cada uma das 51 fontes, marcando-os como não verificados externamente;
+2. atribuir confiança por campo e registrar todas as dimensões ainda pendentes;
+3. validar a matriz completa e revisar qualquer discrepância com o CSV canônico;
 4. somente então iniciar BR1;
 5. preservar CSV 51 × 34, versão 0.7.0 e DOI bloqueado até os portões correspondentes.
 
-Consulte `QUALITY_CORRECTION_WORKFLOW.md`, `SELECTION_AND_COVERAGE_POLICY.md`, `FINAL_OBJECTIVES_AND_DOI_GATES.md`, `IMPLEMENTATION_WORKFLOW.md` e `DATA1_SCHEMA_AUDIT.md`.
+Consulte `QUALITY_CORRECTION_WORKFLOW.md`, `SELECTION_AND_COVERAGE_POLICY.md`, `FINAL_OBJECTIVES_AND_DOI_GATES.md`, `IMPLEMENTATION_WORKFLOW.md`, `DATA1_SCHEMA_AUDIT.md` e `migration/data1bx_contract.json`.
