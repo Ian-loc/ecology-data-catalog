@@ -7,7 +7,7 @@ A migração do esquema 0.7.0 para 0.8.0 é preparada sem substituir o CSV canô
 - `data1b_migration_matrix.csv`: tipo funcional, escala, formatos, protocolos, ferramentas e situação institucional;
 - `data1bx_migration_matrix.csv`: produtos, visualizações, fontes dos dados, resolução temporal e condições de acesso;
 - `br_batch_registry.json`: ordem e estado dos lotes de revisão manual;
-- `br1_review_matrix.csv` e `br2_review_matrix.csv`: auditorias internas aprofundadas.
+- `br1_review_matrix.csv`, `br2_review_matrix.csv` e `br3_review_matrix.csv`: auditorias internas aprofundadas.
 
 Todas as matrizes permanecem ligadas por `resource_id`. O arquivo `data/data_resources.csv` continua canônico e a versão 0.7.0 permanece protegida até DATA1-C.
 
@@ -46,39 +46,40 @@ Cada dimensão possui valor, confiança, estado, base de evidência, URL, data e
 
 ### BR1 — plataformas e monitoramento de alto impacto
 
-1. CEMADEN (`DR0005`);
-2. dados.gov.br (`DR0008`);
-3. MapBiomas (`DR0010`);
-4. TerraBrasilis (`DR0011`);
-5. BDQueimadas (`DR0012`);
-6. Google Earth Engine (`DR0019`);
-7. Global Forest Watch (`DR0044`).
+CEMADEN, dados.gov.br, MapBiomas, TerraBrasilis, BDQueimadas, Google Earth Engine e Global Forest Watch.
 
 Riscos dominantes: heterogeneidade por produto, agregação de terceiros, acesso e licença variáveis, temporalidade, protocolos e semântica de alertas, focos, incêndios, áreas queimadas e desmatamento.
 
 ### BR2 — biodiversidade, ciência cidadã e redes de dados
 
-1. speciesLink (`DR0013`);
-2. SiBBr (`DR0014`);
-3. eBird (`DR0027`);
-4. Movebank (`DR0028`);
-5. DataONE (`DR0030`);
-6. iNaturalist (`DR0034`);
-7. TRY (`DR0040`).
+speciesLink, SiBBr, eBird, Movebank, DataONE, iNaturalist e TRY.
 
 Riscos dominantes: duplicação entre redes, distinção entre agregador e fonte primária, licença por registro ou dataset, coordenadas sensíveis, viés amostral, produtos brutos versus modelados, qualidade taxonômica, acesso por solicitação e termos dos contribuidores.
 
+### BR3 — clima, repositórios e redes de fluxos
+
+Copernicus Climate Data Store, WorldClim, NEON, PANGAEA, Climate Data Guide, AmeriFlux e FLUXNET.
+
+Riscos dominantes: versão e coleção, mistura de observações, reanálises, modelos e produtos derivados, período climatológico e cenário, dados provisórios ou reprocessados, licença por dataset ou sítio, área de influência das torres e sobreposição entre AmeriFlux e FLUXNET.
+
+## Papéis dos links
+
+Os cards usam dois destinos distintos:
+
+- `homepage_url`: página institucional principal, página “Sobre” ou página oficial do órgão responsável;
+- `data_access_url`: catálogo, busca, visualizador, formulário de solicitação ou página de download.
+
+`scripts/audit_link_roles.py` gera `data/link_role_audit.json` e contabiliza:
+
+- destinos separados;
+- URLs iguais pendentes de revisão;
+- casos em que acesso aos dados não se aplica.
+
+A igualdade dos links não autoriza correção automática. O destino correto depende de inspeção oficial atual.
+
 ## Interpretação da auditoria interna
 
-Cada matriz BR registra:
-
-- justificativa e prioridade;
-- flags de risco;
-- achados de consistência interna;
-- URLs já existentes no CSV;
-- dimensões que exigem documentação oficial;
-- estado factual externo;
-- decisão conservadora sobre o CSV.
+Cada matriz BR registra justificativa, prioridade, riscos, achados de consistência, URLs existentes, dimensões que exigem documentação oficial e decisão conservadora sobre o CSV.
 
 A auditoria interna não equivale a validação factual. Enquanto `external_review_status` for `bloqueada_sem_web`, a linha não pode receber nova URL de evidência, revisor, data, confiança elevada ou decisão de correção.
 
@@ -91,9 +92,8 @@ python3 scripts/validate_migration_matrix.py
 python3 scripts/validate_data1bx_matrix.py
 python3 scripts/load_data1bx_from_canonical.py
 python3 scripts/validate_br_batches.py
+python3 scripts/audit_link_roles.py
 ```
-
-Para compatibilidade, `python3 scripts/validate_br1_matrix.py` valida somente BR1 por meio do validador comum.
 
 O validador dos lotes confere registro, contratos, matrizes, ordem, exclusividade dos IDs, URLs existentes, estado manual em DATA1-B, confiança desconhecida em DATA1-BX e bloqueios de evidência.
 
@@ -103,7 +103,8 @@ O validador dos lotes confere registro, contratos, matrizes, ordem, exclusividad
 - versão formal: 0.7.0;
 - esquema 0.8.0: proposta não aplicada;
 - DATA1-BX: projeção concluída, confiança externa desconhecida;
-- BR1 e BR2: auditorias internas concluídas; revisões factuais externas bloqueadas;
-- 14 dos 35 casos manuais distribuídos em lotes;
+- BR1, BR2 e BR3: auditorias internas concluídas; revisões factuais externas bloqueadas;
+- 21 dos 35 casos manuais distribuídos em lotes;
+- 14 casos manuais restantes para BR4 e BR5;
 - candidatos: fora do CSV;
 - DOI: bloqueado.
