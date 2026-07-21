@@ -24,31 +24,34 @@ Corrigir fragilidades antes de migrar para 0.8.0, expandir fontes ou preparar v1
 | 3 | DATA1-BX | projeção concluída | 51 × 5 dimensões; confiança desconhecida |
 | 4 | DATA1-BR | auditoria interna concluída | BR1–BR5 cobrem 35 casos |
 | 5 | DATA1-BR-CLOSE | concluído | fila comparável e evidência longa |
-| 6 | STATE-SYNC | implementado_pendente_integracao | estados coerentes e contrato de espelhamento |
-| 7 | DATA1-EXT | ativo | G0 e ondas W1A–W1C, W2–W5 com evidência oficial |
-| 8 | DATA1-C | bloqueado | migração atômica para 38 campos |
-| 9 | DATA1-D | planejado | 14 regras no CSV final |
-| 10 | DATA2 | planejado | revisão das 51 fontes no esquema final |
-| 11 | UX5 | parcial | 38 campos e testes funcionais |
-| 12 | RELEASE2 | bloqueado | v1.0.0 e deploy confirmado |
-| 13 | DOI | bloqueado | G1–G12 concluídos |
-| 14 | RES1 | P3 | resolução por produto |
-| 15 | EDU1 | P3 | página didática referenciada |
+| 6 | STATE-SYNC | concluído | estados coerentes, contrato e verificação dos espelhos |
+| 7 | MIRROR-XLSX | bloqueado por upload | substituir o espelho histórico de 22 campos |
+| 8 | DATA1-EXT | ativo | G0 e ondas W1A–W1C, W2–W5 com evidência oficial |
+| 9 | DATA1-C | bloqueado | migração atômica para 38 campos |
+| 10 | DATA1-D | planejado | 14 regras no CSV final |
+| 11 | DATA2 | planejado | revisão das 51 fontes no esquema final |
+| 12 | UX5 | parcial | 38 campos e testes funcionais |
+| 13 | RELEASE2 | bloqueado | v1.0.0 e deploy confirmado |
+| 14 | DOI | bloqueado | G1–G12 concluídos |
+| 15 | RES1 | P3 | resolução por produto |
+| 16 | EDU1 | P3 | página didática referenciada |
 
 ## STATE-SYNC
 
-A inspeção de 2026-07-21 confirmou duas divergências operacionais:
+A inspeção confirmou duas classes de divergência:
 
 - workflows secundários ainda indicavam DATA1-BR-CLOSE como pendente, embora `WORKFLOW_STATUS.md` e a `main` comprovassem seu encerramento;
-- os dois arquivos do Drive mantinham tabela histórica de 22 campos, enquanto o CSV canônico possuía 34 campos.
+- os dois arquivos do Drive não estavam no mesmo estado.
 
-Correções deste ciclo:
+Estado verificado após o PR #32 e a inspeção direta:
 
-1. alinhar DATA1-BR-CLOSE como concluído e DATA1-EXT como ativo;
-2. registrar que o Drive não é fonte canônica nem mecanismo de edição bidirecional;
-3. definir metadados e testes para futuras regenerações dos dois espelhos;
-4. manter a sincronização de conteúdo separada da migração científica 0.8.0;
-5. encerrar somente após PR, CI, merge e changelog.
+- GitHub: 51 × 34;
+- planilha nativa: 51 × 34, com os 34 cabeçalhos canônicos;
+- `.xlsx`: 51 × 22;
+- a substituição do `.xlsx` foi tentada duas vezes e falhou por proxy `407`;
+- o changelog recebeu uma linha corretiva para impedir declaração indevida de sincronização total.
+
+STATE-SYNC está concluído como ciclo de coerência, contrato e diagnóstico. O reparo do arquivo bruto permanece isolado em MIRROR-XLSX e não bloqueia a revisão científica.
 
 ## DATA1-BR-CLOSE
 
@@ -94,10 +97,9 @@ DATA1-C somente começa quando decisões críticas estiverem resolvidas. A migra
 Não se deve copiar manualmente alterações entre GitHub, planilha nativa e `.xlsx`.
 
 - o CSV em `main` é a autoridade;
-- os espelhos devem ser gerados do mesmo commit;
-- a tabela `data_resources` dos espelhos deve corresponder célula a célula ao CSV da versão declarada;
-- abas legadas e changelog podem ser preservados, mas devem permanecer identificados;
-- divergências impedem declarar o espelho sincronizado;
+- a planilha nativa 51 × 34 é o espelho operacional verificado;
+- o `.xlsx` 51 × 22 permanece histórico até substituição e nova comparação;
+- a falha do upload deve ser tratada como incidente operacional, não como evidência de sincronização;
 - a regeneração completa 51 × 38 ocorre após DATA1-C e DATA1-D.
 
 ## RES1 — resolução por produto
@@ -116,7 +118,7 @@ EDU1 é não bloqueante para v1.0.0 e DOI e deve começar após DATA2 ou com cap
 
 ## Checkpoints de reordenação
 
-Reavaliar após STATE-SYNC, G0, W1A–W1C, migração 0.8.0, regeneração dos espelhos, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
+Reavaliar após G0, W1A–W1C, eventual reparo MIRROR-XLSX, migração 0.8.0, regeneração dos espelhos, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
 
 ## Estado protegido
 

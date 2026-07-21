@@ -22,14 +22,15 @@ Fluxo autorizado:
 
 `CSV em main → validação → artefatos do site → espelho nativo e .xlsx → verificação do espelho → changelog`
 
-## Diagnóstico de 2026-07-21
+## Estado verificado em 2026-07-21
 
 - GitHub: versão 0.7.0, 51 recursos e 34 campos;
-- planilha nativa: aba `data_resources` com 51 recursos e 22 campos;
-- arquivo `.xlsx`: estrutura histórica equivalente à versão de 22 campos;
-- conclusão: os dois arquivos do Drive preservam dados úteis, mas não são cópias completas do catálogo canônico atual.
+- planilha nativa: aba `data_resources` verificada com 51 recursos e os 34 campos canônicos, na ordem correta;
+- arquivo `.xlsx`: download bruto verificado com 51 recursos e 22 campos históricos;
+- o changelog chegou a declarar que os dois arquivos estavam sincronizados; uma linha posterior corrigiu essa afirmação;
+- a substituição do `.xlsx` pelo export da planilha nativa foi tentada duas vezes e falhou por erro interno de proxy `407` no upload.
 
-Até a regeneração, nenhuma análise de completude, auditoria ou publicação deve usar os espelhos como substitutos do CSV canônico.
+Conclusão: a planilha nativa é o espelho operacional 0.7.0 atualmente verificado. O `.xlsx` permanece um espelho histórico incompleto e não deve ser tratado como sincronizado.
 
 ## Metadados obrigatórios de cada espelho
 
@@ -73,15 +74,16 @@ Antes de declarar um espelho sincronizado, confirmar:
 - legibilidade da tabela e congelamento do cabeçalho;
 - registro no `project_changelog`.
 
+A simples ampliação da grade para 34 colunas não comprova sincronização; os 34 cabeçalhos e valores devem estar efetivamente preenchidos e comparados.
+
 ## Momento de regeneração
 
-O estado de 22 campos deve ser tratado como espelho histórico durante DATA1-EXT. A regeneração completa deve ocorrer em um único ciclo controlado:
+1. a planilha nativa 0.7.0 de 34 campos pode ser usada para consulta operacional, sempre como derivada;
+2. o `.xlsx` de 22 campos deve ser substituído e verificado quando a operação de upload voltar a funcionar;
+3. após DATA1-C e DATA1-D, os dois espelhos devem ser obrigatoriamente regenerados com 51 recursos e 38 campos;
+4. a geração deve ser repetida após cada release que altere o CSV canônico.
 
-1. opcionalmente, produzir um snapshot 0.7.0 de 34 campos quando necessário para consulta operacional;
-2. obrigatoriamente, após DATA1-C e DATA1-D, gerar os dois espelhos 0.8.0 com 51 recursos e 38 campos;
-3. repetir a geração após cada release que altere o CSV canônico.
-
-A regeneração não desbloqueia revisão científica, v1.0.0 ou DOI por si só.
+A pendência do `.xlsx` não bloqueia DATA1-EXT, porque o CSV e a planilha nativa permanecem disponíveis. Ela bloqueia apenas a declaração de que ambos os espelhos estão sincronizados.
 
 ## Concorrência e conflitos
 
@@ -89,14 +91,16 @@ A regeneração não desbloqueia revisão científica, v1.0.0 ou DOI por si só.
 - antes de escrever, conferir o commit atual de `main` e a última entrada do changelog;
 - se outra sessão alterar o CSV ou o Drive durante a geração, interromper a declaração de sincronização e reiniciar a comparação;
 - nunca mesclar manualmente duas versões de `data_resources` no Drive;
-- divergências devem ser registradas como incidente operacional, com arquivos, commits e campos afetados.
+- divergências e falhas de upload devem ser registradas como incidente operacional, com arquivos, commits e campos afetados.
 
-## Critério de conclusão
+## Critério de conclusão de cada espelho
 
-O espelhamento somente está concluído quando:
+Um espelho individual somente está sincronizado quando:
 
 1. o commit-fonte está integrado à `main`;
 2. a suíte relevante está verde;
-3. a planilha nativa e o `.xlsx` foram atualizados a partir desse mesmo commit;
+3. o arquivo foi atualizado a partir desse commit;
 4. as verificações de igualdade foram aprovadas;
 5. o evento foi registrado no changelog do Drive.
+
+A planilha nativa atende atualmente aos requisitos de conteúdo 51 × 34. O `.xlsx` ainda não atende.
