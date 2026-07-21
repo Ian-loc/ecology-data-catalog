@@ -36,7 +36,25 @@ Excluir do CSV canônico:
 
 Bases de literatura, rankings e redes de citação exigem um portão de escopo antes da migração. A decisão deve avaliar reutilização estruturada, função de descoberta ambiental, governança, condições de acesso, utilidade distinta e destino adequado: catálogo principal, seção auxiliar, fusão ou exclusão.
 
-Recursos já presentes, como Project COSMOS, permanecem preservados até decisão explícita. O portão não autoriza exclusão automática.
+### Regra derivada de G0
+
+Um recurso bibliométrico pode permanecer no catálogo principal quando:
+
+1. oferece dados ou metadados estruturados, busca, rede de citações ou função de descoberta reutilizável;
+2. possui metodologia oficial e governança identificável;
+3. tem utilidade distinta para pesquisa, ensino ou extensão ambiental;
+4. permite registrar acesso, licença e limitações com honestidade;
+5. não é apresentado como substituto de fontes ambientais primárias.
+
+Materiais apenas narrativos, noticiosos ou didáticos, sem infraestrutura estruturada, continuam excluídos.
+
+A natureza bibliométrica deve ser explícita. Cobertura de publicações e citações não deve ser confundida com cobertura espacial ou temporal de observações ambientais.
+
+### Decisão do Project COSMOS
+
+G0 confirmou a elegibilidade do Project COSMOS para o catálogo principal como infraestrutura bibliométrica. A decisão completa está em `G0_COSMOS_SCOPE_DECISION.md`.
+
+A permanência não implica que a base integral seja aberta, que exista API pública ou que o recurso forneça medições ambientais. Esses atributos permanecem descritos com suas limitações e sujeitos à revisão factual final.
 
 ## Duplicidade e relação entre recursos
 
@@ -87,4 +105,4 @@ Prioridade menor para recursos redundantes, pouco documentados, estritamente com
 
 ## Estado atual
 
-Enquanto DATA1 e DATA2 não estiverem concluídos, novas fontes permanecem fora do CSV. Project COSMOS está no portão G0 e permanece no CSV 0.7.0 sem decisão automática.
+Enquanto DATA1 e DATA2 não estiverem concluídos, novas fontes permanecem fora do CSV. O portão G0 do Project COSMOS está resolvido com decisão `manter_confirmado`; W1A é o próximo ciclo de DATA1-EXT. Nenhuma alteração automática do CSV 0.7.0 foi autorizada por G0.
