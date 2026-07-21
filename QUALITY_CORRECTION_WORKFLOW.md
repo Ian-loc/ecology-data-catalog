@@ -26,9 +26,9 @@ Corrigir fragilidades antes de migrar para 0.8.0, expandir fontes ou preparar v1
 | 5 | DATA1-BR-CLOSE | concluído | fila comparável e evidência longa |
 | 6 | STATE-SYNC | concluído | estados coerentes, contrato e verificação dos espelhos |
 | 7 | MIRROR-XLSX | bloqueado por upload | substituir o espelho histórico de 22 campos |
-| 8 | DATA1-EXT | ativo | escopo e revisão factual por ondas |
-| 9 | G0 | implementado_pendente_integracao | elegibilidade do Project COSMOS |
-| 10 | W1A | bloqueado por G0 | TerraBrasilis e Google Earth Engine Data Catalog |
+| 8 | DATA1-EXT | ativo | revisão factual por ondas |
+| 9 | G0 | concluído | elegibilidade do Project COSMOS |
+| 10 | W1A | ativo | TerraBrasilis e Google Earth Engine Data Catalog |
 | 11 | W1B | planejado | SiBBr, BDiA e HidroWeb |
 | 12 | W1C | planejado | SIRENE e Global Carbon Atlas |
 | 13 | DATA1-C | bloqueado | migração atômica para 38 campos |
@@ -42,7 +42,7 @@ Corrigir fragilidades antes de migrar para 0.8.0, expandir fontes ou preparar v1
 
 ## G0 — decisão de escopo
 
-O Project COSMOS cumpre a unidade de seleção como infraestrutura bibliométrica de informação climática. A decisão implementada mantém o recurso no catálogo principal, sem tratá-lo como fonte de medições ambientais.
+O Project COSMOS cumpre a unidade de seleção como infraestrutura bibliométrica de informação climática. A decisão mantém o recurso no catálogo principal, sem tratá-lo como fonte de medições ambientais.
 
 A decisão exige:
 
@@ -54,9 +54,9 @@ A decisão exige:
 - não comparação com disponibilidade de dados ambientais empíricos;
 - preservação do CSV 0.7.0 até ciclo autorizado.
 
-G0 resolve elegibilidade, não todos os atributos factuais. A tabela de evidências permanece vazia porque nenhuma nova alegação canônica foi verificada ou alterada neste portão.
+G0 resolveu elegibilidade, não todos os atributos factuais. A tabela de evidências permanece vazia porque nenhuma nova alegação canônica foi verificada ou alterada neste portão.
 
-A regra geral derivada foi incorporada à política de seleção. O documento completo é `G0_COSMOS_SCOPE_DECISION.md`.
+O PR #34, commit `6f48a7265be2757eac223c6e768e98faa2579da8`, passou no run `29838354760` e foi registrado no changelog. G0 está concluído; W1A está ativo. O documento completo é `G0_COSMOS_SCOPE_DECISION.md`.
 
 ## STATE-SYNC
 
@@ -138,7 +138,7 @@ EDU1 é não bloqueante para v1.0.0 e DOI e deve começar após DATA2 ou com cap
 
 ## Checkpoints de reordenação
 
-Reavaliar após fechamento de G0, W1A–W1C, eventual reparo MIRROR-XLSX, migração 0.8.0, regeneração dos espelhos, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
+Reavaliar após W1A–W1C, eventual reparo MIRROR-XLSX, migração 0.8.0, regeneração dos espelhos, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
 
 ## Estado protegido
 
