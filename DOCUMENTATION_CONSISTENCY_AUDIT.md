@@ -45,20 +45,28 @@ Em caso de divergência, o estado comprovado no GitHub, os contratos executávei
 
 ## Follow-up de 2026-07-21 — STATE-SYNC
 
-A nova inspeção confirmou que `WORKFLOW_STATUS.md` estava atualizado, mas os dois workflows secundários ainda preservavam o estado anterior à integração de DATA1-BR-CLOSE. Também identificou divergência estrutural entre:
+A nova inspeção confirmou que `WORKFLOW_STATUS.md` estava atualizado, mas os dois workflows secundários ainda preservavam o estado anterior à integração de DATA1-BR-CLOSE. Também identificou divergência entre os arquivos do Drive.
 
-- GitHub 0.7.0: 51 recursos × 34 campos;
-- planilha nativa: 51 recursos × 22 campos;
-- `.xlsx`: estrutura histórica equivalente de 22 campos.
+O PR #32 integrou o contrato e o alinhamento documental no commit `f35b2c766043308d9e19751539a2c99972df949b`. O run `29836549232` passou integralmente.
 
-Ações implementadas no ciclo STATE-SYNC:
+### Correção após concorrência no Drive
 
-1. DATA1-BR-CLOSE passa a `concluído` e DATA1-EXT a `ativo` em todos os workflows;
+Durante o fechamento, outra operação atualizou a planilha nativa e acrescentou ao changelog uma linha declarando sincronização dos dois arquivos. A verificação direta mostrou:
+
+- planilha nativa: 51 recursos × 34 campos, com cabeçalhos canônicos;
+- `.xlsx`: 51 recursos × 22 campos no arquivo bruto baixado do Drive;
+- a substituição do `.xlsx` por export da planilha nativa falhou duas vezes por proxy interno `407`;
+- uma nova linha do changelog corrigiu a declaração anterior e preservou o histórico.
+
+Ações consolidadas:
+
+1. DATA1-BR-CLOSE aparece como `concluído` e DATA1-EXT como `ativo`;
 2. W1 é subdividida em W1A–W1C apenas para limitar o tamanho dos PRs;
 3. `DRIVE_MIRROR_CONTRACT.md` registra autoridade, fluxo unidirecional, metadados e verificações;
-4. `validate_quality_correction_plan.py` passa a exigir STATE-SYNC e o contrato de espelhamento;
-5. o README deixa explícito que os arquivos do Drive são derivados;
-6. nenhuma linha do CSV, candidato, interface, versão ou portão de DOI é alterado.
+4. `validate_quality_correction_plan.py` exige STATE-SYNC e o diagnóstico separado dos espelhos;
+5. STATE-SYNC é encerrado como ciclo de coerência e diagnóstico;
+6. o reparo do arquivo bruto é isolado em MIRROR-XLSX e não bloqueia DATA1-EXT;
+7. nenhuma linha do CSV, candidato, interface, versão ou portão de DOI é alterado.
 
 ## Estado protegido
 
