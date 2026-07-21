@@ -22,10 +22,13 @@ A versão 0.7.0 reúne 51 fontes e 34 campos. A proposta 0.8.0 acrescenta quatro
 - 16 registros estão preparados estruturalmente para futura migração;
 - 35 registros permanecem em revisão manual;
 - BR1–BR5 concluíram a auditoria interna desses 35 casos;
-- a revisão externa usa fila separada e evidências por afirmação;
+- G0 confirmou Project COSMOS no catálogo principal como infraestrutura bibliométrica, sem alteração do CSV;
+- a revisão factual externa prossegue por W1A–W1C e ondas posteriores;
 - nenhuma correção externa é aplicada automaticamente ao CSV;
 - 18 candidatos permanecem fora do catálogo;
 - v1.0.0 e DOI estão bloqueados.
+
+Recursos bibliométricos podem ser elegíveis quando oferecem dados ou metadados estruturados, metodologia, governança e utilidade ambiental distinta. Eles não devem ser apresentados como substitutos de fontes ambientais primárias. A decisão detalhada de COSMOS está em [G0_COSMOS_SCOPE_DECISION.md](G0_COSMOS_SCOPE_DECISION.md).
 
 ## Atualização
 
@@ -43,6 +46,7 @@ A versão 0.7.0 reúne 51 fontes e 34 campos. A proposta 0.8.0 acrescenta quatro
 - [Estado atual](WORKFLOW_STATUS.md)
 - [Workflow de implementação](IMPLEMENTATION_WORKFLOW.md)
 - [Workflow de qualidade](QUALITY_CORRECTION_WORKFLOW.md)
+- [Decisão G0 do Project COSMOS](G0_COSMOS_SCOPE_DECISION.md)
 - [Contrato de espelhamento do Drive](DRIVE_MIRROR_CONTRACT.md)
 - [Auditoria de consistência documental](DOCUMENTATION_CONSISTENCY_AUDIT.md)
 - [Metodologia](METHODOLOGY.md)
