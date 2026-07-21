@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW_PATH = ROOT / "QUALITY_CORRECTION_WORKFLOW.md"
 IMPLEMENTATION_PATH = ROOT / "IMPLEMENTATION_WORKFLOW.md"
 STATUS_PATH = ROOT / "WORKFLOW_STATUS.md"
+MIRROR_PATH = ROOT / "DRIVE_MIRROR_CONTRACT.md"
 SELECTION_PATH = ROOT / "SELECTION_AND_COVERAGE_POLICY.md"
 AUDIT_PATH = ROOT / "DOCUMENTATION_CONSISTENCY_AUDIT.md"
 SCHEMA_PATH = ROOT / "schema" / "v0.8.0-draft.json"
@@ -39,8 +40,8 @@ EXPECTED_RULES = {
     "placeholders_must_not_coexist_with_positive_values",
 }
 REQUIRED_CYCLES = [
-    "QC0", "SELECT1", "DATA1-BX", "DATA1-BR", "DATA1-BR-CLOSE", "DATA1-EXT",
-    "DATA1-C", "DATA1-D", "DATA2", "UX5", "RELEASE2", "DOI", "RES1", "EDU1",
+    "QC0", "SELECT1", "DATA1-BX", "DATA1-BR", "DATA1-BR-CLOSE", "STATE-SYNC",
+    "DATA1-EXT", "DATA1-C", "DATA1-D", "DATA2", "UX5", "RELEASE2", "DOI", "RES1", "EDU1",
 ]
 
 
@@ -60,7 +61,7 @@ def require_cycle_order(text: str, filename: str) -> None:
 
 
 for path in (
-    WORKFLOW_PATH, IMPLEMENTATION_PATH, STATUS_PATH, SELECTION_PATH, AUDIT_PATH,
+    WORKFLOW_PATH, IMPLEMENTATION_PATH, STATUS_PATH, MIRROR_PATH, SELECTION_PATH, AUDIT_PATH,
     SCHEMA_PATH, CSV_PATH, CITATION_PATH, READINESS_PATH, REGISTRY_PATH, QUEUE_PATH, EVIDENCE_PATH,
 ):
     if not path.exists():
@@ -91,20 +92,51 @@ for token in (
     "página didática",
     "checkpoints de reordenação",
     "nenhuma nova fonte entra diretamente no catálogo",
+    "planilha nativa e `.xlsx` não substituem o csv canônico",
 ):
     if token.casefold() not in workflow_folded:
         fail(f"workflow sem requisito: {token}")
+
+implementation_folded = implementation.casefold()
+for token in (
+    "| data1-br-close | concluído |",
+    "| state-sync | implementado_pendente_integracao |",
+    "| data1-ext | ativo |",
+    "w1a",
+    "w1b",
+    "w1c",
+    "drive_mirror_contract.md",
+):
+    if token.casefold() not in implementation_folded:
+        fail(f"IMPLEMENTATION_WORKFLOW.md sem estado crítico: {token}")
 
 status_folded = status.casefold()
 for token in (
     "revisão externa bloqueada",
     "novas fontes permanecem fora do csv",
     "| data1-br-close | concluído |",
+    "| state-sync | implementado_pendente_integracao |",
     "| data1-ext | ativo |",
+    "51 × 22",
     "res1 e edu1",
 ):
     if token.casefold() not in status_folded:
         fail(f"WORKFLOW_STATUS.md sem estado crítico: {token}")
+
+mirror = MIRROR_PATH.read_text(encoding="utf-8").casefold()
+for token in (
+    "data/data_resources.csv",
+    "única fonte canônica",
+    "source_commit",
+    "generated_at",
+    "51 recursos e 34 campos",
+    "51 recursos e 22 campos",
+    "igualdade célula a célula",
+    "regeneração completa",
+    "project_changelog",
+):
+    if token.casefold() not in mirror:
+        fail(f"DRIVE_MIRROR_CONTRACT.md sem requisito: {token}")
 
 selection = SELECTION_PATH.read_text(encoding="utf-8").casefold()
 for section in (
@@ -132,6 +164,6 @@ if readiness.get("doi_allowed") is not False:
     fail("DOI deve permanecer bloqueado")
 
 print(
-    "OK: DATA1-BR-CLOSE concluído e DATA1-EXT ativo; documentação coerente, "
-    "plano antigo removido, 14 regras alinhadas, CSV 51 × 34 e versão 0.7.0 preservados"
+    "OK: STATE-SYNC implementado; DATA1-BR-CLOSE concluído e DATA1-EXT ativo; "
+    "contrato de espelhamento presente, 14 regras alinhadas, CSV 51 × 34 e versão 0.7.0 preservados"
 )

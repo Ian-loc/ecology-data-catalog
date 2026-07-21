@@ -12,7 +12,8 @@ Corrigir fragilidades antes de migrar para 0.8.0, expandir fontes ou preparar v1
 4. registrar evidência por afirmação e dimensão;
 5. não alterar CSV, versão ou DOI enquanto os portões estiverem bloqueados;
 6. reavaliar a ordem após cada ciclo relevante;
-7. manter RES1 e EDU1 como enriquecimentos não bloqueantes.
+7. manter RES1 e EDU1 como enriquecimentos não bloqueantes;
+8. tratar planilha nativa e `.xlsx` como espelhos derivados, conforme `DRIVE_MIRROR_CONTRACT.md`.
 
 ## Ordem operacional atual
 
@@ -22,16 +23,32 @@ Corrigir fragilidades antes de migrar para 0.8.0, expandir fontes ou preparar v1
 | 2 | SELECT1 | concluído | política de seleção e cobertura |
 | 3 | DATA1-BX | projeção concluída | 51 × 5 dimensões; confiança desconhecida |
 | 4 | DATA1-BR | auditoria interna concluída | BR1–BR5 cobrem 35 casos |
-| 5 | DATA1-BR-CLOSE | implementado_pendente_integracao | fila comparável e evidência longa |
-| 6 | DATA1-EXT | próximo ciclo | G0 e ondas W1–W5 com evidência oficial |
-| 7 | DATA1-C | bloqueado | migração atômica para 38 campos |
-| 8 | DATA1-D | planejado | 14 regras no CSV final |
-| 9 | DATA2 | planejado | revisão das 51 fontes no esquema final |
-| 10 | UX5 | parcial | 38 campos e testes funcionais |
-| 11 | RELEASE2 | bloqueado | v1.0.0 e deploy confirmado |
-| 12 | DOI | bloqueado | G1–G12 concluídos |
-| 13 | RES1 | P3 | resolução por produto |
-| 14 | EDU1 | P3 | página didática referenciada |
+| 5 | DATA1-BR-CLOSE | concluído | fila comparável e evidência longa |
+| 6 | STATE-SYNC | implementado_pendente_integracao | estados coerentes e contrato de espelhamento |
+| 7 | DATA1-EXT | ativo | G0 e ondas W1A–W1C, W2–W5 com evidência oficial |
+| 8 | DATA1-C | bloqueado | migração atômica para 38 campos |
+| 9 | DATA1-D | planejado | 14 regras no CSV final |
+| 10 | DATA2 | planejado | revisão das 51 fontes no esquema final |
+| 11 | UX5 | parcial | 38 campos e testes funcionais |
+| 12 | RELEASE2 | bloqueado | v1.0.0 e deploy confirmado |
+| 13 | DOI | bloqueado | G1–G12 concluídos |
+| 14 | RES1 | P3 | resolução por produto |
+| 15 | EDU1 | P3 | página didática referenciada |
+
+## STATE-SYNC
+
+A inspeção de 2026-07-21 confirmou duas divergências operacionais:
+
+- workflows secundários ainda indicavam DATA1-BR-CLOSE como pendente, embora `WORKFLOW_STATUS.md` e a `main` comprovassem seu encerramento;
+- os dois arquivos do Drive mantinham tabela histórica de 22 campos, enquanto o CSV canônico possuía 34 campos.
+
+Correções deste ciclo:
+
+1. alinhar DATA1-BR-CLOSE como concluído e DATA1-EXT como ativo;
+2. registrar que o Drive não é fonte canônica nem mecanismo de edição bidirecional;
+3. definir metadados e testes para futuras regenerações dos dois espelhos;
+4. manter a sincronização de conteúdo separada da migração científica 0.8.0;
+5. encerrar somente após PR, CI, merge e changelog.
 
 ## DATA1-BR-CLOSE
 
@@ -60,9 +77,28 @@ Cada evidência deve registrar:
 
 Documentação oficial sustenta API, formato, licença e autenticação. Literatura revisada por pares confronta identidade, uso efetivo, limitações e interpretação; não substitui documentação técnica atual.
 
+A onda W1 é executada em três PRs pequenos, sem alterar sua composição:
+
+- W1A: TerraBrasilis e Google Earth Engine Data Catalog;
+- W1B: SiBBr, BDiA e HidroWeb;
+- W1C: SIRENE e Global Carbon Atlas.
+
+O checkpoint científico ocorre após o conjunto W1A–W1C, não após cada arquivo isolado.
+
 ## Migração e revisão final
 
 DATA1-C somente começa quando decisões críticas estiverem resolvidas. A migração deve preservar 51 IDs, todo o conteúdo científico e produzir 38 campos. DATA1-D ativa as 14 regras no CSV final. DATA2 revisa as 51 fontes no esquema estabilizado.
+
+## Espelhamento do Drive
+
+Não se deve copiar manualmente alterações entre GitHub, planilha nativa e `.xlsx`.
+
+- o CSV em `main` é a autoridade;
+- os espelhos devem ser gerados do mesmo commit;
+- a tabela `data_resources` dos espelhos deve corresponder célula a célula ao CSV da versão declarada;
+- abas legadas e changelog podem ser preservados, mas devem permanecer identificados;
+- divergências impedem declarar o espelho sincronizado;
+- a regeneração completa 51 × 38 ocorre após DATA1-C e DATA1-D.
 
 ## RES1 — resolução por produto
 
@@ -80,7 +116,7 @@ EDU1 é não bloqueante para v1.0.0 e DOI e deve começar após DATA2 ou com cap
 
 ## Checkpoints de reordenação
 
-Reavaliar após DATA1-BR-CLOSE, G0, W1, migração 0.8.0, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
+Reavaliar após STATE-SYNC, G0, W1A–W1C, migração 0.8.0, regeneração dos espelhos, primeiros lotes DATA2 e testes funcionais. Uma tarefa sobe quando bloqueia dependências, evita perda, corrige informação pública ou reduz retrabalho; desce quando é apenas enriquecimento ou pode ser entregue com segurança depois.
 
 ## Estado protegido
 
@@ -89,4 +125,5 @@ Reavaliar após DATA1-BR-CLOSE, G0, W1, migração 0.8.0, primeiros lotes DATA2 
 - `doi_allowed = false`;
 - nenhuma nova fonte entra diretamente no catálogo;
 - candidatos permanecem fora do CSV;
+- planilha nativa e `.xlsx` não substituem o CSV canônico;
 - RES1 e EDU1 não desbloqueiam nem bloqueiam o DOI.
