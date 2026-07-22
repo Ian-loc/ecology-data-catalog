@@ -5,9 +5,9 @@ Catálogo público e pesquisável de plataformas, repositórios, redes e sistema
 
 ## Produto
 
-- [Buscar fontes](https://ian-loc.github.io/ecology-data-catalog/#catalogo)
-- [Analisar o catálogo](https://ian-loc.github.io/ecology-data-catalog/analytics.html)
-- [Sobre, método e citação](https://ian-loc.github.io/ecology-data-catalog/about.html)
+- [Buscar fontes](https://ian-loc.github.io/ScienceDataSourcesCatalog/#catalogo)
+- [Analisar o catálogo](https://ian-loc.github.io/ScienceDataSourcesCatalog/analytics.html)
+- [Sobre, método e citação](https://ian-loc.github.io/ScienceDataSourcesCatalog/about.html)
 - [CSV canônico](data/data_resources.csv)
 
 O catálogo é uma camada de descoberta e triagem. Não hospeda os datasets externos nem substitui documentação, licença ou citação dos produtos originais.
@@ -58,7 +58,7 @@ Recursos bibliométricos podem ser elegíveis quando oferecem dados ou metadados
 
 ## Como citar
 
-> LARA, Ian. *Ecology Data Catalog: catálogo de fontes de dados ambientais para pesquisa, ensino e extensão*. Versão 0.7.0. GitHub, 2026. https://ian-loc.github.io/ecology-data-catalog/
+> LARA, Ian. *Science Data Sources Catalog: catálogo de fontes de dados ambientais para pesquisa, ensino e extensão*. Versão 0.7.0. GitHub, 2026. https://ian-loc.github.io/ScienceDataSourcesCatalog/
 
 ORCID: [0000-0003-1164-9318](https://orcid.org/0000-0003-1164-9318). A citação do catálogo não substitui a citação do dataset, produto e versão originais.
 
