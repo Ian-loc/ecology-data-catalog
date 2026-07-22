@@ -8,6 +8,7 @@ Catálogo público e pesquisável de plataformas, repositórios, redes e sistema
 - [Buscar fontes](https://ian-loc.github.io/ScienceDataSourcesCatalog/#catalogo)
 - [Analisar o catálogo](https://ian-loc.github.io/ScienceDataSourcesCatalog/analytics.html)
 - [Sobre, método e citação](https://ian-loc.github.io/ScienceDataSourcesCatalog/about.html)
+- [Código, dados e documentação](https://github.com/Ian-loc/ScienceDataSourcesCatalog)
 - [CSV canônico](data/data_resources.csv)
 
 O catálogo é uma camada de descoberta e triagem. Não hospeda os datasets externos nem substitui documentação, licença ou citação dos produtos originais.
