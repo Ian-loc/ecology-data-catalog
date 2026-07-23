@@ -1,7 +1,7 @@
 name: Materializar correções factuais
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [opened, reopened]
   workflow_dispatch:
 permissions:
   contents: write
@@ -26,7 +26,7 @@ jobs:
       - name: Consolidar na branch do pull request
         if: github.event_name == 'pull_request'
         run: |
-          rm .github/workflows/materialize-remediation.yml
+          rm -f .github/workflows/materialize-remediation.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .
