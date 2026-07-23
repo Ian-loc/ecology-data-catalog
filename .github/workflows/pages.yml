@@ -17,6 +17,11 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Aplicar correções factuais confirmadas
+        run: |
+          python3 -m py_compile scripts/apply_factual_remediation.py
+          python3 scripts/apply_factual_remediation.py
+          python3 scripts/apply_factual_remediation.py --check
       - name: Validar workflow de correções de qualidade
         run: python3 scripts/validate_quality_correction_plan.py
       - name: Validar fila de candidatos
@@ -58,6 +63,7 @@ jobs:
           test -s products.html
           test -s analytics.html
           test -s about.html
+          test -s data/data_resources.csv
           test -s data/data_resources.json
           test -s data/data_products.json
           test -s data/build-meta.json
@@ -71,8 +77,10 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-      - name: Gerar artefatos do site
+      - name: Aplicar correções e gerar artefatos do site
         run: |
+          python3 scripts/apply_factual_remediation.py
+          python3 scripts/apply_factual_remediation.py --check
           python3 scripts/validate_product_catalog.py
           python3 scripts/build_catalog.py
           python3 scripts/audit_link_roles.py
